@@ -1,0 +1,166 @@
+---
+title: "Week 03 Assignment"
+author: "Harrison Fuller"
+email: "harrison.fuller@wsu.edu"
+course-short: "STATS 419"
+instructor: "Monte J. Shaffer"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    fig_caption: true
+    number_sections: true
+---
+```{r, mychunk-local, message=FALSE}
+library(devtools);
+my.source = "local";
+local.path = "/Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/";
+source(file = "/Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/libraries.R", local = T);
+```
+
+# Matrix
+
+Create the "rotate matrix" functions described in lectures from the sample matrix.  Apply to the example "myMatrix".
+
+
+```{r, mychunk-matrix-include, message=FALSE}
+source(file = "/Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/functions-matrix.R", local = T);
+
+myMatrix = matrix(c(
+  1, 0, 2,
+  0, 3, 0,
+  4, 0, 5), nrow = 3, byrow = T);
+```
+
+
+```{r, mychunk-matrix-demo}
+source(file = "/Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/functions-matrix.R", local = T);
+
+transposeMatrix(myMatrix);
+rotateMatrix90(myMatrix); # clockwise
+rotateMatrix180(myMatrix);
+rotateMatrix270(myMatrix)
+```
+
+
+
+# IRIS
+
+Recreate the graphic for the IRIS Data Set using R.  Same titles, same scales, same colors. See: https://en.wikipedia.org/wiki/Iris_flower_data_set#/media/File:Iris_dataset_scatterplot.svg   
+
+```{r, my-chunk-iris-demo}
+# plot function
+data("iris");
+
+cols = c("red", "green3", "blue")
+pairs(iris[1:4], 
+      main = "Iris Data (red=setosa,green=versicolor,blue=virginica)", 
+      pch = 21, 
+      bg = cols[unclass(iris$Species)], # unclass removes class attributes... why does this matter?
+      cex = 0.7, 
+      cex.labels = 1.5,
+      gap = 1)
+
+```
+
+Sentences: Right 2-3 sentences concisely defining the IRIS Data Set.  Maybe search KAGGLE for a nice template.  Be certain the final writeup are your own sentences (make certain you modify what you find, make it your own, but also cite where you got your ideas from).  NOTE:  Watch the video, Figure 8 has a +5 EASTER EGG.  
+
+
+# Personality
+
+
+## Cleanup RAW   
+
+Import "personality-raw.txt" into R.  Remove the V00 column.  Create two new columns from the current column "date_test":  year and week. Stack Overflow may help:  https://stackoverflow.com/questions/22439540/how-to-get-week-numbers-from-dates ... Sort the new data frame by YEAR, WEEK so the newest tests are first ... The newest tests (e.g., 2020 or 2019) are at the top of the data frame.  Then remove duplicates using the unique function based on the column "md5_email".  Save the data frame in the same "pipe-delimited format" ( | is a pipe ) with the headers.  You will keep the new data frame as "personality-clean.txt" for future work (you will not upload it at this time).  In the homework, for this tasks, report how many records your raw dataset had and how many records your clean dataset has.  
+
+```{r, my-chunk-personality-demo}
+
+
+```
+
+# Varience and Z-score
+
+Write functions for doSummary and sampleVariance and doMode ... test these functions in your homework on the "monte.shaffer@gmail.com" record from the clean dataset.  Report your findings.  For this "monte.shaffer@gmail.com" record, also create z-scores.  Plot(x,y) where x is the raw scores for "monte.shaffer@gmail.com" and y is the z-scores from those raw scores.  Include the plot in your assignment, and write 2 sentences describing what pattern you are seeing and why this pattern is present.  
+
+## Variance
+### Naive
+### Traditional Two-Pass
+## Z-score
+
+# Will vs Denzel   
+
+```{r, mychunk-imdb-include, message=FALSE}
+
+source(file = "/Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/functions-imdb.R", local = T)
+
+```
+
+
+## Will Smith
+
+```{r, will, message=F, fig.cap = c("Will Smith Scatterplot:IMDB(2020)", "Will Smith Boxplot:IMDB(2020)")}
+
+nmid = "nm0000226";
+will = grabFilmsForPerson(nmid);
+plot(will$movies.50[,c(1,6,7:10)]);
+boxplot(will$movies.50$millions);
+widx = which.max(will$movies.50$millions);
+will$movies.50[widx, ];
+summary(will$movies.50$year)
+```
+
+## Denzel Washington
+```{r,mychunk-denzel}
+nmid = "nm0000243";
+ 	denzel = grabFilmsForPerson(nmid);
+ 	plot(denzel$movies.50[,c(1,6,7:10)]);
+  	boxplot(denzel$movies.50$millions);
+		didx =  which.max(denzel$movies.50$millions);
+	denzel$movies.50[didx,];
+		summary(denzel$movies.50$year);
+		
+```
+
+## BoxPlot of Top-50 movies using Raw Dollars
+
+```{r,mychunk-boxplot-raw}
+par(mfrow=c(1,2));
+	boxplot(will$movies.50$millions, main=will$name, ylim=c(0,360), ylab="Raw Millions" );
+	boxplot(denzel$movies.50$millions, main=denzel$name, ylim=c(0,360), ylab="Raw Millions" );
+	
+	par(mfrow=c(1,1));
+		
+```
+
+## Side-by-Side Comparisons
+Build side-by-side box plots on several of the variables (including #6) to compare the two movie stars.  After each box plot, write 2+ sentence describing what you are seeing, and what conclusions you can logically make.  You will need to review what the box plot is showing with the box portion, the divider in the box, and the whiskers.
+
+### Adjusted Dollars (2000)
+### Total Votes  (Divide by 1,000,000)
+### Average Ratings
+### Year?  Minutes?
+### Metacritic (NA values)
+
+#3 Denzel Washington
+
+```{r, denzel, message=F, fig.cap = c("Denzel Washington Scatterplot:IMDB(2020)", "Denzel Washington Boxplot:IMDB(2020)")}
+nmid = "nm0000243";
+denzel = grabFilmsForPerson(nmid);
+plot(denzel$movies.50[,c(1,6,7:10)]);
+boxplot(denzel$movies.50$millions);
+widx = which.max(denzel$movies.50$millions);
+denzel$movies.50[widx, ];
+summary(denzel$movies.50$year)
+```
+
+## side-by-side comparisons
+Build side-by-side box plots on several of the variables (including #6) to compare the two movie stars.  After each box plot, write 2+ sentence describing what you are seeing, and what conclusions you can logically make.  You will need to review what the box plot is showing with the box portion, the divider in the box, and the whiskers.  
+
+### Adjusted Dollars (2000)   
+### Total votes   # Divide by 1 mil to scale
+### Average Ratings
+### Year? Minutes?
+### Metacritic (NA values)

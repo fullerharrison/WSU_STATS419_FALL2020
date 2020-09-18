@@ -1,0 +1,17 @@
+---
+title: "Week 03 Assignment"
+author: "Harrison Fuller"
+email: "harrison.fuller@wsu.edu"
+course-short: "STATS 419"
+instructor: "Monte J. Shaffer"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document
+
+fig_caption: true
+number_sections: true
+---
+
+
+
+

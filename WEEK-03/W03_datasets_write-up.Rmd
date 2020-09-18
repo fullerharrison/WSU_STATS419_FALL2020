@@ -1,0 +1,26 @@
+---
+title: "Week 03 Assignment"
+author: "Harrison Fuller"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  pdf_document:
+    citation_package: natbib
+    latex_engine: pdflatex
+    template: /Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS
+      419/WSU_STATS419_FALL2020/latex-templates/homework.tex
+course: STATS 419 Survey of Multivariate Anlaysis
+course-short: STATS 419
+instructor: Monte J. Shaffer
+email: harrison.fuller@wsu.edu
+fig_caption: yes
+number_sections: yes
+myVar: 'This is a variable'
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE)
+```
+
+This is a sentence
+We would like to thank \citet{Rmarkdown:Latex:Templates} for hints at creating our own template\footnote{This is finally coming together}. This is my `r rmarkdown::metadata$myVar` and this a variable.
