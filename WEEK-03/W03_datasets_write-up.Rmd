@@ -18,9 +18,32 @@ myVar: 'This is a variable'
 ---
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=TRUE)
+``````{r, mychunk-path, message=FALSE}
+library(devtools);
+github.path = "https://raw.githubusercontent.com/fullerharrison/WSU_STATS419_FALL2020/";
+source_url(paste0(github.path, "master/functions/libraries.R"))
 ```
 
-This is a sentence
-We would like to thank \citet{Rmarkdown:Latex:Templates} for hints at creating our own template\footnote{This is finally coming together}. This is my `r rmarkdown::metadata$myVar` and this a variable.
+
+# Matrix
+
+Create the "rotate matrix" functions described in lectures from the sample matrix.  Apply to the example "myMatrix".
+
+
+```{r, mychunk-matrix-include, message=FALSE}
+source_url(paste0(github.path, "master/functions/functions_matrix.R"));
+
+myMatrix = matrix(c(
+  1, 0, 2,
+  0, 3, 0,
+  4, 0, 5), nrow = 3, byrow = T)
+
+```
+
+```{r, mychunk-matrix-demo}
+
+transposeMatrix(myMatrix);
+rotateMatrix90(myMatrix); # clockwise
+rotateMatrix180(myMatrix);
+rotateMatrix270(myMatrix)
+```

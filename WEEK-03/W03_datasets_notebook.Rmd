@@ -14,11 +14,11 @@ output:
     fig_caption: true
     number_sections: true
 ---
-```{r, mychunk-local, message=FALSE}
+```{r, mychunk-path, message=FALSE}
 library(devtools);
 my.source = "local";
-local.path = "/Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/";
-source(file = "/Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/libraries.R", local = T);
+github.path = "https://raw.githubusercontent.com/fullerharrison/WSU_STATS419_FALL2020/";
+source_url(paste0(github.path, "master/functions/libraries.R"))
 ```
 
 # Matrix
@@ -27,7 +27,7 @@ Create the "rotate matrix" functions described in lectures from the sample matri
 
 
 ```{r, mychunk-matrix-include, message=FALSE}
-source(file = "/Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/functions-matrix.R", local = T);
+source_url(paste0(github.path, "master/functions/functions_matrix.R"));
 
 myMatrix = matrix(c(
   1, 0, 2,
@@ -37,7 +37,6 @@ myMatrix = matrix(c(
 
 
 ```{r, mychunk-matrix-demo}
-source(file = "/Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/functions-matrix.R", local = T);
 
 transposeMatrix(myMatrix);
 rotateMatrix90(myMatrix); # clockwise
@@ -68,6 +67,7 @@ pairs(iris[1:4],
 
 Sentences: Right 2-3 sentences concisely defining the IRIS Data Set.  Maybe search KAGGLE for a nice template.  Be certain the final writeup are your own sentences (make certain you modify what you find, make it your own, but also cite where you got your ideas from).  NOTE:  Watch the video, Figure 8 has a +5 EASTER EGG.  
 
+  British biologist and statistician Ronald Fisher's 1936 paper "The use of multiple measurements in taxonomic problems"  introduces a data set of 3 iris flower types (Setosa, Versicolour, and Virginica) and 5 attributes (sepal length, sepal width, petal length, petal width, and class) ^[https://www.kaggle.com/arshid/iris-flower-dataset]. The data provided is one of the most widely used multivariate data sets for pattern recognition or classification with machine learning ^[https://archive.ics.uci.edu/ml/datasets/iris].  
 
 # Personality
 
@@ -77,8 +77,11 @@ Sentences: Right 2-3 sentences concisely defining the IRIS Data Set.  Maybe sear
 Import "personality-raw.txt" into R.  Remove the V00 column.  Create two new columns from the current column "date_test":  year and week. Stack Overflow may help:  https://stackoverflow.com/questions/22439540/how-to-get-week-numbers-from-dates ... Sort the new data frame by YEAR, WEEK so the newest tests are first ... The newest tests (e.g., 2020 or 2019) are at the top of the data frame.  Then remove duplicates using the unique function based on the column "md5_email".  Save the data frame in the same "pipe-delimited format" ( | is a pipe ) with the headers.  You will keep the new data frame as "personality-clean.txt" for future work (you will not upload it at this time).  In the homework, for this tasks, report how many records your raw dataset had and how many records your clean dataset has.  
 
 ```{r, my-chunk-personality-demo}
+source_url(paste0(github.path, "master/functions/functions-file.R"));
 
+personality_raw <- read.table(paste0(github.path, "master/datasets/personality-raw.txt"), header = T, sep = "|");
 
+personality_clean <- cleanPersonalityData_tidy(personality_raw)
 ```
 
 # Varience and Z-score
@@ -93,8 +96,7 @@ Write functions for doSummary and sampleVariance and doMode ... test these funct
 # Will vs Denzel   
 
 ```{r, mychunk-imdb-include, message=FALSE}
-
-source(file = "/Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/functions-imdb.R", local = T)
+source_url(paste0(github.path, "master/functions/functions_imdb.R"));
 
 ```
 
@@ -139,6 +141,10 @@ par(mfrow=c(1,2));
 Build side-by-side box plots on several of the variables (including #6) to compare the two movie stars.  After each box plot, write 2+ sentence describing what you are seeing, and what conclusions you can logically make.  You will need to review what the box plot is showing with the box portion, the divider in the box, and the whiskers.
 
 ### Adjusted Dollars (2000)
+```{r}
+
+```
+
 ### Total Votes  (Divide by 1,000,000)
 ### Average Ratings
 ### Year?  Minutes?
