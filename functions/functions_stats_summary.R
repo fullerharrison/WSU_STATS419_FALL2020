@@ -62,7 +62,7 @@ doMode = function(x)
 doSummary = function(x, method)
 {
   x <- as.vector(unlist(x));
-  result <- data.frame( 			matrix(ncol = 1,nrow = 10, 
+  result <- data.frame( 			matrix(ncol = 1,nrow = 11, 
                                   dimnames = list( c("length",
                                                      "NAs",
                                                      "mean",
@@ -70,7 +70,8 @@ doSummary = function(x, method)
                                                      "mode",
                                                      "sum",
                                                      "sumSq",
-                                                     "variance",
+                                                     "variance.naive",
+                                                     "variance.two-pass",
                                                      "sd_custom",
                                                      "sd" ),
                                                    "") ));
@@ -79,10 +80,11 @@ doSummary = function(x, method)
   result["mean", ] = mean(x);
   result["median", ] = median(x);
   result["mode", ] = doMode(x);
-  result["sum",] = doSampleVariance(x, method)[[1]];
-  result["sumSq", ] = doSampleVariance(x, method)[[2]];
-  result["variance", ] = doSampleVariance(x, method)[[3]];
-  result["sd_custom", ] = doSampleVariance(x, method)[[4]];
+  result["sum",] = doSampleVariance(x, method = "naive")[[1]];
+  result["sumSq", ] = doSampleVariance(x, method = "naive")[[2]];
+  result["variance.naive", ] = doSampleVariance(x, method = "naive")[[3]];
+  result["variance.two-pass", ] = doSampleVariance(x, method = "two-pass")[[3]];
+  result["sd_custom", ] = doSampleVariance(x, method = "naive")[[4]];
   result["sd", ] = sd(x);
-  result;
+  round(result, digits = 3);
 }
