@@ -9,6 +9,8 @@ doSampleVariance <- function(x, method){
       Sum = Sum + i;
       Sum2 = Sum2 + (i* i);
     }
+    if(count < 2) { return(NULL);} #
+    
     variance = (Sum2 - (Sum * Sum) / count) / (count - 1)
     sd = sqrt(variance);
     
@@ -23,8 +25,9 @@ doSampleVariance <- function(x, method){
       count = count + 1;
       Sum = Sum + i;
     }
+    if(count <  2) { return(NULL);} #
     mean = (Sum / count);
-    for (j in x)
+    for (j in x) # second pass
     {
       Sum2 = Sum2 + ((j - mean) * (j - mean));
     }

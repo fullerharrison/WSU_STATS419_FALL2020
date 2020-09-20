@@ -6,24 +6,26 @@ output:
   pdf_document:
     citation_package: natbib
     latex_engine: pdflatex
-    template: /Users/harrison.fuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS
-      419/WSU_STATS419_FALL2020/latex-templates/homework.tex
-course: STATS 419 Survey of Multivariate Anlaysis
-course-short: STATS 419
-instructor: Monte J. Shaffer
-email: harrison.fuller@wsu.edu
+    template: ./../latex-templates/homework.tex
+course: 'STATS 419 Survey of Multivariate Anlaysis'
+course-short: 'STATS 419'
+instructor: 'Monte J. Shaffer'
+email: 'harrison.fuller@wsu.edu'
 fig_caption: yes
 number_sections: yes
-myVar: 'This is a variable'
+
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
-``````{r, mychunk-path, message=FALSE}
+```{r, mychunk-path, message=FALSE}
 library(devtools);
+my.source = "local";
 github.path = "https://raw.githubusercontent.com/fullerharrison/WSU_STATS419_FALL2020/";
 source_url(paste0(github.path, "master/functions/libraries.R"))
 ```
-
 
 # Matrix
 
@@ -36,14 +38,196 @@ source_url(paste0(github.path, "master/functions/functions_matrix.R"));
 myMatrix = matrix(c(
   1, 0, 2,
   0, 3, 0,
-  4, 0, 5), nrow = 3, byrow = T)
-
+  4, 0, 5), nrow = 3, byrow = T);
 ```
 
-```{r, mychunk-matrix-demo}
+
+```{r, mychunk-matrix-demo, message=FALSE}
 
 transposeMatrix(myMatrix);
 rotateMatrix90(myMatrix); # clockwise
 rotateMatrix180(myMatrix);
 rotateMatrix270(myMatrix)
 ```
+
+
+# IRIS
+
+Recreate the graphic for the IRIS Data Set using R.  Same titles, same scales, same colors. See: https://en.wikipedia.org/wiki/Iris_flower_data_set#/media/File:Iris_dataset_scatterplot.svg   
+
+```{r, my-chunk-iris-demo, message=FALSE}
+# plot function
+data("iris");
+
+cols = c("red", "green3", "blue")
+pairs(iris[1:4], 
+      main = "Iris Data (red=setosa,green=versicolor,blue=virginica)", 
+      pch = 21, 
+      bg = cols[unclass(iris$Species)], # unclass removes class attributes... why does this matter?
+      cex = 0.7, 
+      cex.labels = 1.0,
+      gap = 1)
+
+```
+
+Sentences: Right 2-3 sentences concisely defining the IRIS Data Set.  Maybe search KAGGLE for a nice template.  Be certain the final writeup are your own sentences (make certain you modify what you find, make it your own, but also cite where you got your ideas from).  NOTE:  Watch the video, Figure 8 has a +5 EASTER EGG.  
+
+  British biologist and statistician Ronald Fisher's 1936 paper "The use of multiple measurements in taxonomic problems"  introduces a data set of 3 iris flower types (Setosa, Versicolour, and Virginica) and 5 attributes (sepal length, sepal width, petal length, petal width, and class) ^[https://www.kaggle.com/arshid/iris-flower-dataset]. The data provided is one of the most widely used multivariate data sets for pattern recognition or classification with machine learning ^[https://archive.ics.uci.edu/ml/datasets/iris].  
+
+# Personality
+
+
+## Cleanup RAW   
+
+Import "personality-raw.txt" into R.  Remove the V00 column.  Create two new columns from the current column "date_test":  year and week. Stack Overflow may help:  https://stackoverflow.com/questions/22439540/how-to-get-week-numbers-from-dates ... Sort the new data frame by YEAR, WEEK so the newest tests are first ... The newest tests (e.g., 2020 or 2019) are at the top of the data frame.  Then remove duplicates using the unique function based on the column "md5_email".  Save the data frame in the same "pipe-delimited format" ( | is a pipe ) with the headers.  You will keep the new data frame as "personality-clean.txt" for future work (you will not upload it at this time).  In the homework, for this tasks, report how many records your raw dataset had and how many records your clean dataset has.  
+
+```{r, my-chunk-personality-demo, message=FALSE}
+source_url(paste0(github.path, "master/functions/functions-file.R"));
+
+personality_raw <- read.table(paste0(github.path, "master/datasets/personality-raw.txt"), header = T, sep = "|");
+
+personality_clean <- cleanPersonalityData_tidy(personality_raw)
+```
+
+# Varience and Z-score
+
+Write functions for doSummary and sampleVariance and doMode ... test these functions in your homework on the "monte.shaffer@gmail.com" record from the clean dataset.  Report your findings.  For this "monte.shaffer@gmail.com" record, also create z-scores.  Plot(x,y) where x is the raw scores for "monte.shaffer@gmail.com" and y is the z-scores from those raw scores.  Include the plot in your assignment, and write 2 sentences describing what pattern you are seeing and why this pattern is present.  
+
+```{r,mychunk-variance-intro, message=FALSE}
+source_url(paste0(github.path, "master/functions/functions_stats_summary.R"));
+```
+
+
+## Variance
+
+
+## Z-score
+```{r, Z-score, message=FALSE}
+m.shaffer = "b62c73cdaf59e0a13de495b84030734e"
+
+data <- personality_clean[personality_clean$md5_email == m.shaffer, 4:63];
+doSummary(data);
+
+x <- t(data);
+y <- scale(t(data));
+
+plot(x, y);
+```
+
+The plot generated from scaled "monte.shaffer@gmail.com" data indicates normal distribution of questions answered using the likert scale. The theoretical correlation is near perfect showing a linear relationship between raw scores and normalized scores.  
+
+# Will vs Denzel   
+
+Compare Will Smith and Denzel Washington. [See 03_n greater 1-v2.txt for the necessary functions and will-vs-denzel.txt for some sample code and in DROPBOX: /__student_access__/unit_01_exploratory_data_analysis/week_02/imdb-example ]  You will have to create a new variable $millions.2000 that converts each movie's $millions based on the $year of the movie, so all dollars are in the same time frame.  You will need inflation data from about 1980-2020 to make this work.  
+
+```{r, mychunk-imdb-include, message=FALSE}
+source_url(paste0(github.path, "master/functions/functions_imdb.R"));
+
+```
+
+
+## Will Smith
+
+```{r, will, message=F, fig.cap = c("Will Smith Scatterplot:IMDB(2020)", "Will Smith Boxplot:IMDB(2020)")}
+nmid = "nm0000226";
+ 	will = grabFilmsForPerson(nmid);  ## can we source for dput?
+  source_url("http://md5.mshaffer.com/WSU_STATS419/will");  # look at syntax
+                                                            # will = data;
+
+```
+
+## Denzel Washington
+```{r, denzel, message=F, fig.cap = c("Denzel Washington Scatterplot:IMDB(2020)", "Denzel Washington Boxplot:IMDB(2020)")}
+nmid = "nm0000243";
+ 	denzel = grabFilmsForPerson(nmid);  ## can we source for dput?
+
+```
+
+## BoxPlot of Top-50 movies using Raw Dollars
+
+```{r,mychunk-boxplot-raw, fig.cap = "Will Smith and Denzel Washington Raw Millions Boxplot:IMDB(2020)"}
+par(mfrow=c(1,2));
+	boxplot(will$movies.50$millions, main=will$name, ylim=c(0,360), ylab="Raw Millions" );
+	boxplot(denzel$movies.50$millions, main=denzel$name, ylim=c(0,360), ylab="Raw Millions" );
+		
+```
+
+
+## Side-by-Side Comparisons
+Build side-by-side box plots on several of the variables (including #6) to compare the two movie stars.  After each box plot, write 2+ sentence describing what you are seeing, and what conclusions you can logically make.  You will need to review what the box plot is showing with the box portion, the divider in the box, and the whiskers.
+
+### Adjusted Dollars (2000)
+
+```{r, manipulate inflation data, fig.cap = "Will Smith and Denzel Washington Adjusted Millions Boxplot:IMDB(2020)"}
+source_url("https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/master/humanVerseWSU/R/functions-inflation.R");
+inflation.df <- read.table(paste0(github.path, "master/datasets/inflation.txt"), header = T, sep = "|");
+
+denzel$movies.50 = standardizeDollarsInDataFrame(denzel$movies.50, 2000, "millions", "year", "millionsAdj");
+
+will$movies.50 = standardizeDollarsInDataFrame(will$movies.50, 2000, "millions", "year", "millionsAdj")
+
+par(mfrow=c(1,2));
+
+	boxplot(will$movies.50$millionsAdj, main=will$name, ylim=c(0,360), ylab="Adjusted Millions" );
+	boxplot(denzel$movies.50$millionsAdj, main=denzel$name, ylim=c(0,360), ylab="Adjusted Millions" )
+
+```
+The boxplot above shows a side-by-side comparison of Will Smith and Denzel Washington movie earnings (adjusted for inflation) over each actors top 50 movies respectively. Will Smith has similar success in the average of film earnings with a high degree of variability for movies earning more than his average. The film earnings of Denzel Washington demonstrate much less variability across his film earnings.  
+
+
+### Film Lengths (Minutes)
+
+```{r, Compare-film-lengths, fig.cap = "Will Smith and Denzel Washington Film Lengths Boxplot:IMDB(2020)"}
+par(mfrow = c(1,2))
+
+# will
+boxplot(will$movies.50$minutes,  xlab = "Will", ylab = "Minutes", ylim = c(80,200));
+
+# denzel
+boxplot(denzel$movies.50$minutes, xlab = "Denzel",ylab = "Minutes", ylim = c(80,200))
+
+```
+
+The above boxplot illustrates the distribution of film times for each respective actor. The distribution of Denzel Washington film lengths indicate fairly uniform distribution around 120 minutes with the exception of an outlier from his film `r denzel$movies.50$title[which.max(denzel$movies.50$minutes)]`. The boxplot of Will Smith film lengths show some variability in film lengths that are shorter than his median length film. Denzel Washington appears to have marginally longer film lengths when acting in movies.
+
+### Metacritic (NA values)
+
+```{r, Compare-metacritic-scores, fig.cap = "Will Smith and Denzel Washington Metacritic Scores Boxplot:IMDB(2020)"}
+par(mfrow = c(1,2))
+
+# will
+boxplot(na.omit(will$movies.50$metacritic),  xlab = "Will", ylab = "Metacritic", ylim = c(0,100));
+
+# denzel
+boxplot(na.omit(denzel$movies.50$metacritic), xlab = "Denzel",ylab = "Metacritic", ylim = c(0,100))
+```
+
+The above bloxplots illustrates the distribution of metacritic scores for each respective actor with NA values omitted from each data set. Denzel Washington has some positive skenwess of critic score distribution for his film contributions. Will Smith appears to have substantial negative skewness in critic score ratings. Denzel Washington appears to be more liked in overall film contributions. 
+
+### Average Ratings
+
+```{r, Compare-average-rating, fig.cap = "Will Smith and Denzel Washington Average Ratings of Top 50 Films Boxplot:IMDB(2020)"}
+par(mfrow = c(1,2))
+
+# will
+boxplot(will$movies.50$ratings,  xlab = "Will", ylab = "Ratings", ylim = c(2,10));
+
+# denzel
+boxplot(denzel$movies.50$ratings, xlab = "Denzel",ylab = "Ratings", ylim = c(2,10))
+```
+
+The boxplot above illustrates the average ratings for the top 50 films of each actor. The distribution of either actor appears to have uniform distribution of average ratings across a small range of potential scores. Will Smith has one outlier in which shows a low score for the film `r denzel$movies.50$title[which.min(denzel$movies.50$ratings)]`. From this illustration, it is difficult to assume any real advantage one actor has over another.
+
+### Year
+
+```{r, Compare-year-of-films, fig.cap = "Will Smith and Denzel Washington Year Range of Top 50 Films Boxplot:IMDB(2020)"}
+par(mfrow = c(1,2))
+
+# will
+boxplot(will$movies.50$year,  xlab = "Will", ylab = "Years", ylim = c(1980, 2020));
+
+# denzel
+boxplot(denzel$movies.50$year, xlab = "Denzel",ylab = "Years", ylim = c(1980, 2020))
+```
+
+The boxplot above illustrates the year of release for each film occupying the top 50 list of Will Smith and Denzel Washington, respectively. The distribution of Denzel movie releases indicate a long history of movies considered worthy of the top 50 list. In comparison, a large proportion of Will Smith top 50 movies have been released since the year 2000. One assumption that can be made from this illustration is that Will Smith has gained in popularity more recently and as a result has a larger proportion of movies occupying his top 50 list after the year 2000.
