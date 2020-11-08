@@ -132,30 +132,22 @@ Comparative studies of physiological and anthropological suggest many attribute 
 ```{r,appendix-setup,message=FALSE}
 library(devtools);       # required for source_url
 
+# Source libraries and functions
+# 
+#path.to.secret = "";
+path.to.secret = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/";
 
-source("https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/master/misc/functions-project-measure.R");
+"/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/measure-students.txt"
 
 path.humanVerseWSU = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"
 source_url( paste0(path.humanVerseWSU,"master/misc/functions-project-measure.R") );
 
-source.to.local.function =  "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/";
-
-source.to.local.libraries = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/libraries/";
-
-path.project = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/project-measure/";
-
-# Source libraries and functions
-# 
-source(paste0(source.to.local.libraries, "project-measure_libraries.R"))
-source(paste0(source.to.local.function, "functions_project-measure.R"));
-
-
-path.to.secret = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/";
-
 
 path.github = "https://raw.githubusercontent.com/fullerharrison/WSU_STATS419_FALL2020/";
 
-# source_url( paste0(path.github,"master/functions/functions-project-measure.R") );
+
+source_url( paste0(path.github,"master/functions/functions_project-measure.R") );
+source_url( paste0(path.github,"master/libraries/project-measure_libraries.R") );
 ```
 
 
@@ -186,6 +178,8 @@ path.github = "https://raw.githubusercontent.com/fullerharrison/WSU_STATS419_FAL
 
 # Get measure data
 # 
+
+
 measure = utils::read.csv( paste0(path.to.secret, "measure-students.txt"), 
                            header=TRUE, quote="", sep="|");
 
@@ -195,8 +189,9 @@ measure.X = prepare.measure.data(measure,
 
 # Get NBA data
 # 
-nba <- read_labelled_xlsx(filename = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/datasets/NBA.xlsx", 
-                          data_sheet = "NBA Draft");
+nba <- read.table(file = paste0(path.github,"master/datasets/NBA.txt"),
+                  header = T, 
+                  sep = "|");
 
 nba.X <- clean.nba.data(nba);
 
@@ -264,7 +259,7 @@ measure.nba.cluster = cluster.measure.nba.features(measure.df = measure.X.nba,
 plot(measure.nba.cluster)
 ```
 
-```{r,appendix-summary,message=FALSE, include=FALSE}
+```{r,appendix-summary,message=FALSE, eval=FALSE}
 
 
 myData2 = as.matrix(cbind(measure.height.Xs[, -c(1:3, 6)],nba.height.Xs[-181:-193,-c(1:3, 6)]));
@@ -272,7 +267,7 @@ myNames2 = c("Hand Length (cm)", "Hand Width (cm)",  "Reach (cm)", "Wingspan (cm
             "Pro Hand Length (cm)", "Pro Hand Width (cm)", "Pro Reach (cm)", "Pro Wingspan (cm)");
 
 buildLatexCorrelationTable(myData = myData2, 
-                                myFile = paste0(getwd(),"/tables/","table-scale-correlation-measure-nba.tex"),
+                                myFile = paste0(getwd(),"/tables/","table-scale-correlation-measure-nba-noR.tex"),
                                 myLabel = "table:correlation",
                                 myCaption = "Descriptive Statistics and Correlation Analysis of Participants and Professionals Scaled to Height",
                                 myNames = myNames2,

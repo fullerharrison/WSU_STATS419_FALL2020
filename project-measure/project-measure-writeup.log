@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.11.6)  8 NOV 2020 11:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.11.6)  8 NOV 2020 12:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -931,6 +931,13 @@ File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 583.
+
+Overfull \hbox (328.24266pt too wide) in paragraph at lines 596--596
+[]\T1/lmtt/m/n/10 ## [1] "/Users/harrisonfuller/OneDrive - Washington State Uni
+versity (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/measure-s
+tudents.txt"[] 
+ []
+
 [6]
 <pdfs/project-measure-handout.pdf, id=37, 614.295pt x 794.97pt>
 File: pdfs/project-measure-handout.pdf Graphic file (type pdf)
@@ -938,24 +945,23 @@ File: pdfs/project-measure-handout.pdf Graphic file (type pdf)
 Package pdftex.def Info: pdfs/project-measure-handout.pdf  used on input line 6
 21.
 (pdftex.def)             Requested size: 399.29639pt x 516.73651pt.
-[7 <./pdfs/project-measure-handout.pdf>]
+[7 <./pdfs/project-measure-handout.pdf>] [8]
 <project-measure-writeup_files/figure-latex/image-proportion-comparison-1.pdf, 
-id=54, 469.755pt x 325.215pt>
+id=57, 469.755pt x 325.215pt>
 File: project-measure-writeup_files/figure-latex/image-proportion-comparison-1.
 pdf Graphic file (type pdf)
 <use project-measure-writeup_files/figure-latex/image-proportion-comparison-1.p
 df>
 Package pdftex.def Info: project-measure-writeup_files/figure-latex/image-propo
-rtion-comparison-1.pdf  used on input line 701.
+rtion-comparison-1.pdf  used on input line 704.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[8]
 <project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf, id=58, 469.
 755pt x 325.215pt>
 File: project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf Graphic
  file (type pdf)
 <use project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf>
 Package pdftex.def Info: project-measure-writeup_files/figure-latex/appendix-bo
-xplot-1.pdf  used on input line 709.
+xplot-1.pdf  used on input line 712.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <project-measure-writeup_files/figure-latex/appendix-cluster-analysis-1.pdf, id
 =59, 469.755pt x 325.215pt>
@@ -964,12 +970,13 @@ f Graphic file (type pdf)
 <use project-measure-writeup_files/figure-latex/appendix-cluster-analysis-1.pdf
 >
 Package pdftex.def Info: project-measure-writeup_files/figure-latex/appendix-cl
-uster-analysis-1.pdf  used on input line 717.
+uster-analysis-1.pdf  used on input line 720.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [9 <./project-measure-writeup_files/figure-latex/image-proportion-comparison-1.
 pdf>] [10 <./project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf>
 ] [11 <./project-measure-writeup_files/figure-latex/appendix-cluster-analysis-1
-.pdf>] (./project-measure-writeup.ent) [12] (./project-measure-writeup.bbl
+.pdf>] [12] (./project-measure-writeup.ent) [13] (./project-measure-writeup.bbl
+
 Underfull \hbox (badness 10000) in paragraph at lines 38--45
 \T1/lmr/m/n/10 of An-thro-po-met-ric and Fit-ness Test-ing of
  []
@@ -999,13 +1006,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 79--83
 \T1/lmr/m/n/10 pro-poses low-er-ing draft age to 18 |
  []
 
-) [13] (./project-measure-writeup.toc)
+) [14] (./project-measure-writeup.toc)
 \tf@toc=\write5
 \openout5 = `project-measure-writeup.toc'.
 
 
 AED: lastpage setting LastPage
-[14]
+[15]
 \openout4 = `project-measure-writeup.ent'.
 
 (./project-measure-writeup.aux)
@@ -1042,10 +1049,10 @@ ler/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></Users/harrison
 fuller/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></Users/harr
 isonfuller/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/
 harrisonfuller/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on project-measure-writeup.pdf (14 pages, 369055 bytes).
+Output written on project-measure-writeup.pdf (15 pages, 371225 bytes).
 PDF statistics:
- 162 PDF objects out of 1000 (max. 8388607)
- 107 compressed objects within 2 object streams
+ 165 PDF objects out of 1000 (max. 8388607)
+ 109 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  27 words of extra memory for PDF output out of 10000 (max. 10000000)
 

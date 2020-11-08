@@ -582,30 +582,30 @@ non-professional athletes.
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(devtools);       }\CommentTok{# required for source_url}
 
-
-\KeywordTok{source}\NormalTok{(}\StringTok{"https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/master/misc/functions-project-measure.R"}\NormalTok{);}
-
-\NormalTok{path.humanVerseWSU =}\StringTok{ "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"}
-\KeywordTok{source_url}\NormalTok{( }\KeywordTok{paste0}\NormalTok{(path.humanVerseWSU,}\StringTok{"master/misc/functions-project-measure.R"}\NormalTok{) );}
-
-\NormalTok{source.to.local.function =}\StringTok{  "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/"}\NormalTok{;}
-
-\NormalTok{source.to.local.libraries =}\StringTok{ "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/libraries/"}\NormalTok{;}
-
-\NormalTok{path.project =}\StringTok{ "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/project-measure/"}\NormalTok{;}
-
 \CommentTok{# Source libraries and functions}
 \CommentTok{# }
-\KeywordTok{source}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(source.to.local.libraries, }\StringTok{"project-measure_libraries.R"}\NormalTok{))}
-\KeywordTok{source}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(source.to.local.function, }\StringTok{"functions_project-measure.R"}\NormalTok{));}
-
-
+\CommentTok{#path.to.secret = "";}
 \NormalTok{path.to.secret =}\StringTok{ "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/"}\NormalTok{;}
+
+\StringTok{"/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/measure-students.txt"}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/measure-students.txt"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{path.humanVerseWSU =}\StringTok{ "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"}
+\KeywordTok{source_url}\NormalTok{( }\KeywordTok{paste0}\NormalTok{(path.humanVerseWSU,}\StringTok{"master/misc/functions-project-measure.R"}\NormalTok{) );}
 
 
 \NormalTok{path.github =}\StringTok{ "https://raw.githubusercontent.com/fullerharrison/WSU_STATS419_FALL2020/"}\NormalTok{;}
 
-\CommentTok{# source_url( paste0(path.github,"master/functions/functions-project-measure.R") );}
+
+\KeywordTok{source_url}\NormalTok{( }\KeywordTok{paste0}\NormalTok{(path.github,}\StringTok{"master/functions/functions_project-measure.R"}\NormalTok{) );}
+\KeywordTok{source_url}\NormalTok{( }\KeywordTok{paste0}\NormalTok{(path.github,}\StringTok{"master/libraries/project-measure_libraries.R"}\NormalTok{) );}
 \end{Highlighting}
 \end{Shaded}
 
@@ -633,6 +633,8 @@ non-professional athletes.
 \begin{Highlighting}[]
 \CommentTok{# Get measure data}
 \CommentTok{# }
+
+
 \NormalTok{measure =}\StringTok{ }\NormalTok{utils}\OperatorTok{::}\KeywordTok{read.csv}\NormalTok{( }\KeywordTok{paste0}\NormalTok{(path.to.secret, }\StringTok{"measure-students.txt"}\NormalTok{), }
                            \DataTypeTok{header=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{quote=}\StringTok{""}\NormalTok{, }\DataTypeTok{sep=}\StringTok{"|"}\NormalTok{);}
 
@@ -642,8 +644,9 @@ non-professional athletes.
 
 \CommentTok{# Get NBA data}
 \CommentTok{# }
-\NormalTok{nba <-}\StringTok{ }\KeywordTok{read_labelled_xlsx}\NormalTok{(}\DataTypeTok{filename =} \StringTok{"/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/datasets/NBA.xlsx"}\NormalTok{, }
-                          \DataTypeTok{data_sheet =} \StringTok{"NBA Draft"}\NormalTok{);}
+\NormalTok{nba <-}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\DataTypeTok{file =} \KeywordTok{paste0}\NormalTok{(path.github,}\StringTok{"master/datasets/NBA.txt"}\NormalTok{),}
+                  \DataTypeTok{header =}\NormalTok{ T, }
+                  \DataTypeTok{sep =} \StringTok{"|"}\NormalTok{);}
 
 \NormalTok{nba.X <-}\StringTok{ }\KeywordTok{clean.nba.data}\NormalTok{(nba);}
 \end{Highlighting}
@@ -719,6 +722,29 @@ to anchored scaling to height.}
 professional basketball player data by feature. All values are subjected
 to anchored scaling to height.}
 \end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{myData2 =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(measure.height.Xs[, }\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DecValTok{6}\NormalTok{)],nba.height.Xs[}\OperatorTok{-}\DecValTok{181}\OperatorTok{:-}\DecValTok{193}\NormalTok{,}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DecValTok{6}\NormalTok{)]));}
+\NormalTok{myNames2 =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Hand Length (cm)"}\NormalTok{, }\StringTok{"Hand Width (cm)"}\NormalTok{,  }\StringTok{"Reach (cm)"}\NormalTok{, }\StringTok{"Wingspan (cm)"}\NormalTok{,}
+            \StringTok{"Pro Hand Length (cm)"}\NormalTok{, }\StringTok{"Pro Hand Width (cm)"}\NormalTok{, }\StringTok{"Pro Reach (cm)"}\NormalTok{, }\StringTok{"Pro Wingspan (cm)"}\NormalTok{);}
+
+\KeywordTok{buildLatexCorrelationTable}\NormalTok{(}\DataTypeTok{myData =}\NormalTok{ myData2, }
+                                \DataTypeTok{myFile =} \KeywordTok{paste0}\NormalTok{(}\KeywordTok{getwd}\NormalTok{(),}\StringTok{"/tables/"}\NormalTok{,}\StringTok{"table-scale-correlation-measure-nba-noR.tex"}\NormalTok{),}
+                                \DataTypeTok{myLabel =} \StringTok{"table:correlation"}\NormalTok{,}
+                                \DataTypeTok{myCaption =} \StringTok{"Descriptive Statistics and Correlation Analysis of Participants and Professionals Scaled to Height"}\NormalTok{,}
+                                \DataTypeTok{myNames =}\NormalTok{ myNames2,}
+                                \DataTypeTok{rotateTable=}\OtherTok{TRUE}\NormalTok{,}
+                                \DataTypeTok{rowDivider =} \OtherTok{TRUE}\NormalTok{,}
+                                \DataTypeTok{space.between =} \StringTok{"1mm"}\NormalTok{,}
+                                \DataTypeTok{width.table =} \FloatTok{0.99}\NormalTok{,}
+                                \DataTypeTok{width.names =} \StringTok{"1.5cm"}\NormalTok{, }\CommentTok{# this includes space to M}
+                                \DataTypeTok{space.M.SD =} \StringTok{"0.5mm"}\NormalTok{,}
+                                \DataTypeTok{space.SD.corr =} \StringTok{"0.5mm"}\NormalTok{,}
+                                \DataTypeTok{showOnes =} \StringTok{"center"} \CommentTok{# options are "center" or "left" or NULL}
+\NormalTok{                                )}
+\end{Highlighting}
+\end{Shaded}
 
 
 
