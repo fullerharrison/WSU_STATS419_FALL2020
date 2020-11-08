@@ -1,0 +1,289 @@
+---
+title: "How Average is Average?"
+author:
+- name: Harrison Fuller
+  affiliation: Washington State University
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  pdf_document:
+    keep_tex: yes
+    fig_caption: yes
+    toc: yes
+    toc_depth: 3
+    number_sections: yes
+    citation_package: natbib
+    latex_engine: pdflatex
+    template: ./../latex-templates/report.tex
+  html_document:
+    df_print: paged
+keywords: |
+  basketball; multiple comparisons; t-test; clustering
+abstract: |
+  
+
+  \noindent \emph{Purpose:}    Determine if a height-length-to-body ratio in an average human sample population is significantly different from professional basketball players, and formulate an optimal basket height for an average person.\vspace{0.25in}   
+  
+  
+  \noindent \emph{Material:}    The first dataset was an amalgamation of 180 individuals (men and women) who did not respond to any affiliation with basketball. A standard data collection form was prepared for this study, and form requirements collected all measurements. All data was recorded with typical household measuring devices. The second dataset of professional basketball players was collected by the NBA and available to the general public. Each dataset is summarized by mean, standard deviation, and correlation values were evaluated with a Shapiro-Wilk test of normality. A t-test was employed for independent sample comparisons, and a p-value < 0.05 was considered significant. Fictional team building is characterized by hierarchical clustering. \vspace{0.25in}   
+  
+  
+  \noindent \emph{Results:}     The ratio of hand length and hand width for professional and average participants is .1 for both groups. In both groups the reach ratio is 1.3 for both groups. The results of wingspan report 1.0 and 1.1 for average participants and professional athletes respectively. \vspace{0.25in}   
+  
+  
+  \noindent \emph{Conclusions:}     The selection process of professional athletes favors physiological characteristics that reduce the distance required for sport specific interactions. When comparing limb lenghts as a ratio of height, hand length and reach are the only difference attributed to a normal and professional population body proportions. \vspace{0.25in}
+  
+sectionnumberdepth: 3
+titleEndnotes: ENDNOTES
+titleReferences: REFERENCES
+columnsReferences: 2
+titleTOC: TABLE OF CONTENTS
+bibliography: ./../biblio/master.bib
+bibliostyle: ./../biblio/ormsv080.bst
+subtitle: Comparative inferences of NBA players and a sample population
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE);
+knitr::opts_chunk$set(message = FALSE);
+```
+
+
+\section{Introduction}
+\label{sec:intro}
+
+The human body assumes different physiological structures based on many environmental, genetic, and hereditary factors. These differences have found a good selection in many circumstances, and ar the basis of many anthropological studies \citep{anzellini:2020}. As a result, anthropometric features increase individual and team success \citep{strumbelj:2014}. Several reports have concluded that professional athletes' physiological stature is a critical factor in the selection process  \citep{vaquera:2015}. The ongoing research of anatomical measurements is of great importance for sports science and organization development.
+
+
+Several articles demonstrate anatomical advantages by position and sport. However, only a few reports have been done to compare basketball player anatomical measurements to that of an average population and even less to investigate a sample population's ideal basketball hoop height. Currently, only one report makes inferences on limb proportions and a sample population of adolescent teens who do not play basketball. The group found a significant increase in hand, forearm, lower limb, thigh, and leg lengths of active basketball players \citep{korkmaz:2020}.
+
+
+Sports science is an increasing component of professional athlete selection and factor in overall athletic success. Women volleyball and basketball players have increased selection for height and the combination of height and lean-ness, respectively \citep{bayios:2006}. Additionally, a women's national team comparison by Ljubojevic \citet{ljubojevic:2020} found significant differences in height and body mass in favor of the national team of Ukraine. This evidence purposes inquiry about different basketball net heights for an average population.
+
+
+This study aims to differentiate a sample population from professional NBA basketball players and determine a competitive height for basketball nets for non-professional athletes.
+
+
+\section{Data Description}
+\label{sec:data}
+
+
+Metric data were collected from a sample of volunteers (91 females and 88 males) for distance measurements of arms, legs, height, and interval measurements between body elements with joints in 2020 (see Appendix \ref{sec:appendix-data-handout}). Data curators were directed to collect physiological measurements of hand length, hand width, height, arm length, abdomen length, thigh length, shin-length, and foot length for each respective side. Additionally, factors to include in data acquisition were ethnicity, age, sex, hand and eye dominance, eye color, data quality determination, and time elapsed during measurements. Comparative NBA player data was sourced from combined measurements taken from the 2017 to 2020 seasons \citep{NBA:Stats}. The data includes position, player, hand length and width, height, reach, and wingspan. For this study, the use of height, reach, wingspan, hand length, and width are chosen for comparison between professional athletes and our sample population.
+
+
+Open-source NBA data and participants are summarized as mean, standard deviation, and distribution following the Pearson correlation. A comparison of independent samples is calculated by t-test, where a p-value < .05 is deemed significant.
+
+
+\subsection{Summary of Sample}
+\label{sec:data-sample}
+
+
+Data used in this study utilizes a subset of the total measurements taken. Hand width, hand length, reach, height, and wingspan are metrics explicitly used in the comparison. For the most accurate comparisons between professional athletes and our sample population, volunteer applicants under 19 were removed to be under NBA rules and regulations \citep{reynolds:2019}. Additionally, outliers greater than three standard deviations of each anatomical measurements are removed for comparison. After initial data processing, unique values by players and participants were identified and included in the results. All measurements are reported as centimeters (see \ref{sec:appendix-setup}).
+
+
+\subsection{Summary Statistics of Data}
+\label{sec:data-summary}
+
+
+For a standardized assessment of measurements, ratios of anatomical measurements to height were considered (see \ref{sec:appendix-table}).
+
+
+The average hand length of participants and professional basketball players are reported as .1 for both groups. A correlation of .02 for hand length of an average person and professional athlete is recorded with no statistical significance. However, hand length of an average persons appears to be moderately correlated with participant hand width (.50) and even less correlated with wingspan (.20). As a result, each feature reports some significant differences p-value < .01 while no significant findings are reported for professional basketball player hand length.
+
+
+Average participant hand width is reported as .1 and NBA basketball players report similar results. Hand width of an average participant is weakly correlated with reach (.32) and wingspan (.34) and some negative correlation with professional athletes reach, all features report a p-value < .05. Professional athlete hand width is weakly correlated with with professional hand length (.32) and professional wingspan (.17), where both values are reported with p-values < .001.
+
+
+The reach of professional basketball players and average persons are reported as 1.3 for both groups. Professional athlete's reach has a weak negative correlation with an average person's hand width (-.16), moderate positive correlation with professional player hand length (.46) with corresponding p-values < .05. Correlations are observed with average hand width (.32) and wingspan (.42). The results of the t-test indicate significant differences between values (p < .01).
+
+
+The average wingspan of participants and NBA players is 1.0 and 1.1, respectively. When compared to professional athletes, the wingspan of an average participant is not different. However, a robust positive relationship (.72) is bound between the relationship of wingspan and reach in professional athletes (p-value < .001).
+
+
+\section{Key Findings}
+\label{sec:findings}
+
+
+Observations from the sample of participants and NBA players reveals several difference in limb proportions. Participant hand length shows a negative correlation with NBA player reach which indicates the average population will have a harder time reaching the basket as well as holding the ball to a height of 304.8 cm. Additionally, the distribution of wingspan and reach of professional athletes and the average participant favors that of the athlete (see \ref{sec:appendix-Images}). The difference in reach to hand length is supportive evidence that average hoop heights should reflect that of the normal population. If body proportions are mostly similar, reach-to-hoop-height can be considered for non-professional basketball courts. 
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Comparative studies of physiological and anthropological suggest many attribute to differentiate sports and players (\citep{vaquera:2015}, \citep{masanovic:2018}, \citep{korkmaz:2020}, \citep{drinkwater:2008}, \citep{strumbelj:2014}, \citep{ljubojevic:2020}, \citep{gryko:2018}, \citep{bayios:2006}). The results of each study indicate the importance of physiological attributes for increased performance and creating a more competitive environment. However,  professional basketball players and a sample population has not been compared in terms of height-to-limb ratios. This study demonstrates that an average person is not different when considering physiological attributes in terms of ratios. Moreover, creating subsidiary leagues that use a ratio of average reach to basket length (1.16) will make for a more exhilarating environment for non-professional athletes. 
+
+
+
+\newpage
+
+\section{APPENDICES}
+\label{sec:appendix}
+
+
+\subsection{Tables}
+\label{sec:appendix-table}
+
+\input{tables/table-scale-correlation-measure-nba}
+
+
+\newpage
+\subsection{Data Provenance}
+\label{sec:appendix-data-provenance}
+
+```{r,appendix-setup,message=FALSE}
+library(devtools);       # required for source_url
+
+
+source("https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/master/misc/functions-project-measure.R");
+
+path.humanVerseWSU = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"
+source_url( paste0(path.humanVerseWSU,"master/misc/functions-project-measure.R") );
+
+source.to.local.function =  "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/functions/";
+
+source.to.local.libraries = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/libraries/";
+
+path.project = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/project-measure/";
+
+# Source libraries and functions
+# 
+source(paste0(source.to.local.libraries, "project-measure_libraries.R"))
+source(paste0(source.to.local.function, "functions_project-measure.R"));
+
+
+path.to.secret = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/";
+
+
+path.github = "https://raw.githubusercontent.com/fullerharrison/WSU_STATS419_FALL2020/";
+
+# source_url( paste0(path.github,"master/functions/functions-project-measure.R") );
+```
+
+
+\newpage
+
+\subsubsection{Data Collection Handout}
+\label{sec:appendix-data-handout}
+
+
+\begin{figure}[!ht]
+	\hrule
+	\caption{ \textbf{Handout Page 1} }
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/project-measure-handout.pdf} }
+	\end{center}
+	\label{fig:handout-1}
+	\hrule
+\end{figure}
+
+
+\newpage
+
+
+\subsection{Creating Work Environment}
+\label{sec:appendix-setup}
+
+```{r,appendix-secret }
+
+# Get measure data
+# 
+measure = utils::read.csv( paste0(path.to.secret, "measure-students.txt"), 
+                           header=TRUE, quote="", sep="|");
+
+getOne = c("hand.length", "hand.width", "arm.reach");
+measure.X = prepare.measure.data(measure, 
+                                 getOne = getOne)
+
+# Get NBA data
+# 
+nba <- read_labelled_xlsx(filename = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/datasets/NBA.xlsx", 
+                          data_sheet = "NBA Draft");
+
+nba.X <- clean.nba.data(nba);
+
+```
+
+\subsubsection{Scaling Measurements}
+\label{sec:appendix-scaling}
+
+
+```{r, proportion-comparison, message=FALSE}
+
+measure.X.nba = prepare.measure.for.nba.comparison(measure.X = measure.X, zmin = -3, zmax = 3)
+
+# compare body measurements to height
+# 
+measure.height.Xs <- na.omit(measure.X.nba) %>%
+  mutate(across(c(hand.length:wingspan), ~  round(./height, digits = 2)));
+
+# Compare body measurements to height
+# 
+nba.height.Xs <- na.omit(nba.X) %>%
+  mutate(across(c(hand.length:wingspan), ~  round(./height, digits = 2)));
+
+# merge data
+# 
+height.prop.bind.Xs <- rbind(nba.height.Xs, measure.height.Xs);
+
+
+height.prop.merge.Xs <- height.prop.bind.Xs %>% select(-height) %>%
+  melt(.,c(1:3));
+
+```
+
+\subsection{Images}
+\label{sec:appendix-Images}
+
+
+```{r, image-proportion-comparison, message=FALSE, echo=F , fig.cap= c("Distribution of average participant data vs professional basketball player data by feature. All values are subjected to anchored scaling to height.")}
+
+# compare hand length proportions as boxplots
+# 
+  ggplot(height.prop.merge.Xs)+
+    geom_boxplot(aes(x = status,y = value, fill = status))+
+    facet_wrap(~variable, scales = "free")+
+    theme_minimal()
+
+```
+
+
+```{r,appendix-boxplot,message=FALSE, echo=FALSE, fig.cap= c("Distribution of average participant data vs professional basketball player data by feature and position. All values are subjected to anchored scaling to height.")}
+  ggplot(height.prop.merge.Xs)+
+    geom_boxplot(aes(x = status,y = value, fill = position))+
+    facet_wrap(~variable, scales = "free")+
+    theme_minimal()
+```
+
+
+```{r, appendix-cluster-analysis, message=FALSE, echo=FALSE, fig.cap= c("Heirarchal clustering of average participant data vs professional basketball player data by feature. All values are subjected to anchored scaling to height.")}
+
+measure.nba.cluster = cluster.measure.nba.features(measure.df = measure.X.nba, 
+                                                   nba.df = nba.X, 
+                                                   method = "ward.D2")
+
+
+plot(measure.nba.cluster)
+```
+
+```{r,appendix-summary,message=FALSE, include=FALSE}
+
+
+myData2 = as.matrix(cbind(measure.height.Xs[, -c(1:3, 6)],nba.height.Xs[-181:-193,-c(1:3, 6)]));
+myNames2 = c("Hand Length (cm)", "Hand Width (cm)",  "Reach (cm)", "Wingspan (cm)",
+            "Pro Hand Length (cm)", "Pro Hand Width (cm)", "Pro Reach (cm)", "Pro Wingspan (cm)");
+
+buildLatexCorrelationTable(myData = myData2, 
+                                myFile = paste0(getwd(),"/tables/","table-scale-correlation-measure-nba.tex"),
+                                myLabel = "table:correlation",
+                                myCaption = "Descriptive Statistics and Correlation Analysis of Participants and Professionals Scaled to Height",
+                                myNames = myNames2,
+                                rotateTable=TRUE,
+                                rowDivider = TRUE,
+                                space.between = "1mm",
+                                width.table = 0.99,
+                                width.names = "1.5cm", # this includes space to M
+                                space.M.SD = "0.5mm",
+                                space.SD.corr = "0.5mm",
+                                showOnes = "center" # options are "center" or "left" or NULL
+                                )
+
+```
