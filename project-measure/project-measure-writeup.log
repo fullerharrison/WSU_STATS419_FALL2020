@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.11.6)  8 NOV 2020 12:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.11.6)  8 NOV 2020 13:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -730,7 +730,11 @@ Package csquotes Info: ... none found.
 File: l3backend-pdftex.def 2020-09-24 L3 backend support: PDF output (pdfTeX)
 \l__kernel_color_stack_int=\count320
 \l__pdf_internal_box=\box103
-) (./project-measure-writeup.aux)
+) (./project-measure-writeup.aux
+
+LaTeX Warning: Label `table:correlation' multiply defined.
+
+)
 \openout1 = `project-measure-writeup.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 328.
@@ -840,35 +844,114 @@ LaTeX Font Warning: Font shape `T1/phv/bx/n' undefined
 (Font)              using `T1/cmr/m/n' instead on input line 345.
 
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 3
-96.
+97.
 (/Users/harrisonfuller/Library/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3
-96.
+97.
 (/Users/harrisonfuller/Library/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-396.
+397.
 (/Users/harrisonfuller/Library/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-396.
+397.
 (/Users/harrisonfuller/Library/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 396.
+(Font)              <10> on input line 397.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 396.
+(Font)              <7> on input line 397.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 396.
+(Font)              <5> on input line 397.
 [1
 
 {/Users/harrisonfuller/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex
-.map}] [2] [3] (./tables/table-scale-correlation-measure-nba.tex
+.map}]
+
+LaTeX Warning: Reference `fig:handoutt' on page 2 undefined on input line 464.
+
+<pdfs/OneImage.pdf, id=12, 963.6pt x 542.025pt>
+File: pdfs/OneImage.pdf Graphic file (type pdf)
+<use pdfs/OneImage.pdf>
+Package pdftex.def Info: pdfs/OneImage.pdf  used on input line 486.
+(pdftex.def)             Requested size: 399.2837pt x 224.59708pt.
+[2 <./pdfs/OneImage.pdf>] [3] (./tables/table-correlation-measure-nba-noR.tex
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+[]|\T1/lmr/bx/n/8 Hand
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+\T1/lmr/bx/n/8 Length
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+[]|\T1/lmr/bx/n/8 Hand
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+\T1/lmr/bx/n/8 Width
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+[]|\T1/lmr/bx/n/8 Height
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+[]|\T1/lmr/bx/n/8 Reach
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+\T1/lmr/bx/n/8 Length
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+\T1/lmr/bx/n/8 Width
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+[]|\T1/lmr/bx/n/8 Pro
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+\T1/lmr/bx/n/8 Height
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+[]|\T1/lmr/bx/n/8 Pro
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+\T1/lmr/bx/n/8 Reach
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
+[]|\T1/lmr/bx/n/8 Pro
+ []
+
+
+Underfull \hbox (badness 10000) in alignment at lines 40--40
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+ []
+
+) (./tables/table-scale-correlation-measure-nba.tex
 Underfull \hbox (badness 10000) in paragraph at lines 36--36
 []|\T1/lmr/bx/n/8 Hand
  []
@@ -923,60 +1006,53 @@ Underfull \hbox (badness 10000) in alignment at lines 36--36
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
  []
 
-) [4] [5]
+) [4] [5] [6]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 5
-82.
+95.
 (/Users/harrisonfuller/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 583.
-
-Overfull \hbox (328.24266pt too wide) in paragraph at lines 596--596
-[]\T1/lmtt/m/n/10 ## [1] "/Users/harrisonfuller/OneDrive - Washington State Uni
-versity (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/measure-s
-tudents.txt"[] 
- []
-
-[6]
-<pdfs/project-measure-handout.pdf, id=37, 614.295pt x 794.97pt>
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 596.
+[7]
+<pdfs/project-measure-handout.pdf, id=64, 614.295pt x 794.97pt>
 File: pdfs/project-measure-handout.pdf Graphic file (type pdf)
 <use pdfs/project-measure-handout.pdf>
 Package pdftex.def Info: pdfs/project-measure-handout.pdf  used on input line 6
-21.
+25.
 (pdftex.def)             Requested size: 399.29639pt x 516.73651pt.
-[7 <./pdfs/project-measure-handout.pdf>] [8]
+[8 <./pdfs/project-measure-handout.pdf>] [9]
 <project-measure-writeup_files/figure-latex/image-proportion-comparison-1.pdf, 
-id=57, 469.755pt x 325.215pt>
+id=83, 469.755pt x 325.215pt>
 File: project-measure-writeup_files/figure-latex/image-proportion-comparison-1.
 pdf Graphic file (type pdf)
 <use project-measure-writeup_files/figure-latex/image-proportion-comparison-1.p
 df>
 Package pdftex.def Info: project-measure-writeup_files/figure-latex/image-propo
-rtion-comparison-1.pdf  used on input line 704.
+rtion-comparison-1.pdf  used on input line 708.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-<project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf, id=58, 469.
+<project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf, id=84, 469.
 755pt x 325.215pt>
 File: project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf Graphic
  file (type pdf)
 <use project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf>
 Package pdftex.def Info: project-measure-writeup_files/figure-latex/appendix-bo
-xplot-1.pdf  used on input line 712.
+xplot-1.pdf  used on input line 716.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <project-measure-writeup_files/figure-latex/appendix-cluster-analysis-1.pdf, id
-=59, 469.755pt x 325.215pt>
+=85, 469.755pt x 325.215pt>
 File: project-measure-writeup_files/figure-latex/appendix-cluster-analysis-1.pd
 f Graphic file (type pdf)
 <use project-measure-writeup_files/figure-latex/appendix-cluster-analysis-1.pdf
 >
 Package pdftex.def Info: project-measure-writeup_files/figure-latex/appendix-cl
-uster-analysis-1.pdf  used on input line 720.
+uster-analysis-1.pdf  used on input line 724.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[9 <./project-measure-writeup_files/figure-latex/image-proportion-comparison-1.
-pdf>] [10 <./project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf>
-] [11 <./project-measure-writeup_files/figure-latex/appendix-cluster-analysis-1
-.pdf>] [12] (./project-measure-writeup.ent) [13] (./project-measure-writeup.bbl
-
+[10 <./project-measure-writeup_files/figure-latex/image-proportion-comparison-1
+.pdf>] [11 <./project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf
+>] [12 <./project-measure-writeup_files/figure-latex/appendix-cluster-analysis-
+1.pdf>] [13] (./project-measure-writeup.ent) [14] (./project-measure-writeup.bb
+l
 Underfull \hbox (badness 10000) in paragraph at lines 38--45
 \T1/lmr/m/n/10 of An-thro-po-met-ric and Fit-ness Test-ing of
  []
@@ -1006,25 +1082,31 @@ Underfull \hbox (badness 10000) in paragraph at lines 79--83
 \T1/lmr/m/n/10 pro-poses low-er-ing draft age to 18 |
  []
 
-) [14] (./project-measure-writeup.toc)
+) [15] (./project-measure-writeup.toc)
 \tf@toc=\write5
 \openout5 = `project-measure-writeup.toc'.
 
 
 AED: lastpage setting LastPage
-[15]
+[16]
 \openout4 = `project-measure-writeup.ent'.
 
 (./project-measure-writeup.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
  ) 
 Here is how much of TeX's memory you used:
- 15085 strings out of 481433
- 232134 string characters out of 5918913
- 580569 words of memory out of 5000000
- 31543 multiletter control sequences out of 15000+600000
+ 15098 strings out of 481433
+ 232474 string characters out of 5918913
+ 618071 words of memory out of 5000000
+ 31552 multiletter control sequences out of 15000+600000
  614337 words of font info for 77 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  77i,15n,84p,777b,537s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1049,10 +1131,10 @@ ler/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></Users/harrison
 fuller/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></Users/harr
 isonfuller/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/
 harrisonfuller/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on project-measure-writeup.pdf (15 pages, 371225 bytes).
+Output written on project-measure-writeup.pdf (16 pages, 422557 bytes).
 PDF statistics:
- 165 PDF objects out of 1000 (max. 8388607)
- 109 compressed objects within 2 object streams
+ 191 PDF objects out of 1000 (max. 8388607)
+ 125 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 27 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 38 words of extra memory for PDF output out of 10000 (max. 10000000)
 

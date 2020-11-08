@@ -390,7 +390,8 @@ athletes favors physiological characteristics that reduce the distance
 required for sport specific interactions. When comparing limb lenghts as
 a ratio of height, hand length and reach are the only difference
 attributed to a normal and professional population body proportions.
-\vspace{0.25in}
+Utilizing a ratio basket hight of 1.16 for an average persons will make
+for more competitive pick-up games. \vspace{0.25in}
 
 
 \vskip 8.5pt \noindent \textbf{\underline{Keywords}:} basketball; multiple comparisons; t-test; clustering \par
@@ -460,7 +461,7 @@ nets for non-professional athletes.
 Metric data were collected from a sample of volunteers (91 females and
 88 males) for distance measurements of arms, legs, height, and interval
 measurements between body elements with joints in 2020 (see Appendix
-\ref{sec:appendix-data-handout}). Data curators were directed to collect
+\ref{fig:handoutt}). Data curators were directed to collect
 physiological measurements of hand length, hand width, height, arm
 length, abdomen length, thigh length, shin-length, and foot length for
 each respective side. Additionally, factors to include in data
@@ -477,6 +478,16 @@ Open-source NBA data and participants are summarized as mean, standard
 deviation, and distribution following the Pearson correlation. A
 comparison of independent samples is calculated by t-test, where a
 p-value \textless{} .05 is deemed significant.
+
+\begin{figure}[!ht]
+    \hrule
+    \caption{ \textbf{Height Comparisons} }
+    \begin{center}
+        \scalebox{1.00}{    \includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/OneImage.pdf} }
+    \end{center}
+    \label{fig:comparison}
+    \hrule
+\end{figure}
 
 \subsection{Summary of Sample}
 \label{sec:data-sample}
@@ -561,7 +572,7 @@ and a sample population has not been compared in terms of height-to-limb
 ratios. This study demonstrates that an average person is not different
 when considering physiological attributes in terms of ratios. Moreover,
 creating subsidiary leagues that use a ratio of average reach to basket
-length (1.16) will make for a more exhilarating environment for
+length (1.17) will make for a more exhilarating environment for
 non-professional athletes.
 
 \newpage
@@ -571,6 +582,8 @@ non-professional athletes.
 
 \subsection{Tables}
 \label{sec:appendix-table}
+
+\input{tables/table-correlation-measure-nba-noR}
 
 \input{tables/table-scale-correlation-measure-nba}
 
@@ -584,19 +597,10 @@ non-professional athletes.
 
 \CommentTok{# Source libraries and functions}
 \CommentTok{# }
-\CommentTok{#path.to.secret = "";}
+
+\CommentTok{# path.to.secret = "WRITE-SOMETHING-HERE";}
 \NormalTok{path.to.secret =}\StringTok{ "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/"}\NormalTok{;}
 
-\StringTok{"/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/measure-students.txt"}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/measure-students.txt"
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{path.humanVerseWSU =}\StringTok{ "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"}
 \KeywordTok{source_url}\NormalTok{( }\KeywordTok{paste0}\NormalTok{(path.humanVerseWSU,}\StringTok{"master/misc/functions-project-measure.R"}\NormalTok{) );}
 
@@ -620,7 +624,7 @@ non-professional athletes.
     \begin{center}
         \scalebox{1.00}{    \includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/project-measure-handout.pdf} }
     \end{center}
-    \label{fig:handout-1}
+    \label{fig:handout}
     \hrule
 \end{figure}
 
@@ -725,9 +729,30 @@ to anchored scaling to height.}
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{myData =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(measure.X.nba[, }\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{)],nba.X[}\OperatorTok{-}\DecValTok{181}\OperatorTok{:-}\DecValTok{193}\NormalTok{,}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{)]));}
+\NormalTok{myNames =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Hand Length (cm)"}\NormalTok{, }\StringTok{"Hand Width (cm)"}\NormalTok{,  }\StringTok{"Height (cm)"}\NormalTok{, }\StringTok{"Reach (cm)"}\NormalTok{, }\StringTok{"Wingspan (cm)"}\NormalTok{,}
+            \StringTok{"Pro Hand Length (cm)"}\NormalTok{, }\StringTok{"Pro Hand Width (cm)"}\NormalTok{, }\StringTok{"Pro Height (cm)"}\NormalTok{, }\StringTok{"Pro Reach (cm)"}\NormalTok{, }\StringTok{"Pro Wingspan (cm)"}\NormalTok{);}
+
+
+\KeywordTok{buildLatexCorrelationTable}\NormalTok{(}\DataTypeTok{myData =}\NormalTok{ myData, }
+                                \DataTypeTok{myFile =} \KeywordTok{paste0}\NormalTok{(}\KeywordTok{getwd}\NormalTok{(),}\StringTok{"/tables/"}\NormalTok{,}\StringTok{"table-correlation-measure-nba-noR.tex"}\NormalTok{),}
+                                \DataTypeTok{myLabel =} \StringTok{"table:correlation"}\NormalTok{,}
+                                \DataTypeTok{myCaption =} \StringTok{"Descriptive Statistics and Correlation Analysis of Participants and Professionals Scaled to Height"}\NormalTok{,}
+                                \DataTypeTok{myNames =}\NormalTok{ myNames,}
+                                \DataTypeTok{rotateTable=}\OtherTok{TRUE}\NormalTok{,}
+                                \DataTypeTok{rowDivider =} \OtherTok{TRUE}\NormalTok{,}
+                                \DataTypeTok{space.between =} \StringTok{"1mm"}\NormalTok{,}
+                                \DataTypeTok{width.table =} \FloatTok{0.99}\NormalTok{,}
+                                \DataTypeTok{width.names =} \StringTok{"1.5cm"}\NormalTok{, }\CommentTok{# this includes space to M}
+                                \DataTypeTok{space.M.SD =} \StringTok{"0.5mm"}\NormalTok{,}
+                                \DataTypeTok{space.SD.corr =} \StringTok{"0.5mm"}\NormalTok{,}
+                                \DataTypeTok{showOnes =} \StringTok{"center"} \CommentTok{# options are "center" or "left" or NULL}
+\NormalTok{                                )}
+
 \NormalTok{myData2 =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(measure.height.Xs[, }\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DecValTok{6}\NormalTok{)],nba.height.Xs[}\OperatorTok{-}\DecValTok{181}\OperatorTok{:-}\DecValTok{193}\NormalTok{,}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DecValTok{6}\NormalTok{)]));}
 \NormalTok{myNames2 =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Hand Length (cm)"}\NormalTok{, }\StringTok{"Hand Width (cm)"}\NormalTok{,  }\StringTok{"Reach (cm)"}\NormalTok{, }\StringTok{"Wingspan (cm)"}\NormalTok{,}
             \StringTok{"Pro Hand Length (cm)"}\NormalTok{, }\StringTok{"Pro Hand Width (cm)"}\NormalTok{, }\StringTok{"Pro Reach (cm)"}\NormalTok{, }\StringTok{"Pro Wingspan (cm)"}\NormalTok{);}
+
 
 \KeywordTok{buildLatexCorrelationTable}\NormalTok{(}\DataTypeTok{myData =}\NormalTok{ myData2, }
                                 \DataTypeTok{myFile =} \KeywordTok{paste0}\NormalTok{(}\KeywordTok{getwd}\NormalTok{(),}\StringTok{"/tables/"}\NormalTok{,}\StringTok{"table-scale-correlation-measure-nba-noR.tex"}\NormalTok{),}

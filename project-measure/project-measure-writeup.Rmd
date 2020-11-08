@@ -67,10 +67,21 @@ This study aims to differentiate a sample population from professional NBA baske
 \label{sec:data}
 
 
-Metric data were collected from a sample of volunteers (91 females and 88 males) for distance measurements of arms, legs, height, and interval measurements between body elements with joints in 2020 (see Appendix \ref{sec:appendix-data-handout}). Data curators were directed to collect physiological measurements of hand length, hand width, height, arm length, abdomen length, thigh length, shin-length, and foot length for each respective side. Additionally, factors to include in data acquisition were ethnicity, age, sex, hand and eye dominance, eye color, data quality determination, and time elapsed during measurements. Comparative NBA player data was sourced from combined measurements taken from the 2017 to 2020 seasons \citep{NBA:Stats}. The data includes position, player, hand length and width, height, reach, and wingspan. For this study, the use of height, reach, wingspan, hand length, and width are chosen for comparison between professional athletes and our sample population.
+Metric data were collected from a sample of volunteers (91 females and 88 males) for distance measurements of arms, legs, height, and interval measurements between body elements with joints in 2020 (see Appendix \ref{fig:handoutt}). Data curators were directed to collect physiological measurements of hand length, hand width, height, arm length, abdomen length, thigh length, shin-length, and foot length for each respective side. Additionally, factors to include in data acquisition were ethnicity, age, sex, hand and eye dominance, eye color, data quality determination, and time elapsed during measurements. Comparative NBA player data was sourced from combined measurements taken from the 2017 to 2020 seasons \citep{NBA:Stats}. The data includes position, player, hand length and width, height, reach, and wingspan. For this study, the use of height, reach, wingspan, hand length, and width are chosen for comparison between professional athletes and our sample population.
 
 
 Open-source NBA data and participants are summarized as mean, standard deviation, and distribution following the Pearson correlation. A comparison of independent samples is calculated by t-test, where a p-value < .05 is deemed significant.
+
+
+\begin{figure}[!ht]
+	\hrule
+	\caption{ \textbf{Height Comparisons} }
+	\begin{center}
+	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/OneImage.pdf} }
+	\end{center}
+	\label{fig:comparison}
+	\hrule
+\end{figure}
 
 
 \subsection{Summary of Sample}
@@ -109,11 +120,12 @@ Observations from the sample of participants and NBA players reveals several dif
 \section{Conclusion}
 \label{sec:conclusion}
 
-Comparative studies of physiological and anthropological suggest many attribute to differentiate sports and players (\citep{vaquera:2015}, \citep{masanovic:2018}, \citep{korkmaz:2020}, \citep{drinkwater:2008}, \citep{strumbelj:2014}, \citep{ljubojevic:2020}, \citep{gryko:2018}, \citep{bayios:2006}). The results of each study indicate the importance of physiological attributes for increased performance and creating a more competitive environment. However,  professional basketball players and a sample population has not been compared in terms of height-to-limb ratios. This study demonstrates that an average person is not different when considering physiological attributes in terms of ratios. Moreover, creating subsidiary leagues that use a ratio of average reach to basket length (1.16) will make for a more exhilarating environment for non-professional athletes. 
+Comparative studies of physiological and anthropological suggest many attribute to differentiate sports and players (\citep{vaquera:2015}, \citep{masanovic:2018}, \citep{korkmaz:2020}, \citep{drinkwater:2008}, \citep{strumbelj:2014}, \citep{ljubojevic:2020}, \citep{gryko:2018}, \citep{bayios:2006}). The results of each study indicate the importance of physiological attributes for increased performance and creating a more competitive environment. However,  professional basketball players and a sample population has not been compared in terms of height-to-limb ratios. This study demonstrates that an average person is not different when considering physiological attributes in terms of ratios. Moreover, creating subsidiary leagues that use a ratio of average reach to basket length (1.17) will make for a more exhilarating environment for non-professional athletes. 
 
 
 
 \newpage
+
 
 \section{APPENDICES}
 \label{sec:appendix}
@@ -122,7 +134,10 @@ Comparative studies of physiological and anthropological suggest many attribute 
 \subsection{Tables}
 \label{sec:appendix-table}
 
+\input{tables/table-correlation-measure-nba-noR}
+
 \input{tables/table-scale-correlation-measure-nba}
+
 
 
 \newpage
@@ -135,7 +150,8 @@ library(devtools);       # required for source_url
 # Source libraries and functions
 # 
 
-path.to.secret = "WRITE-SOMETHING-HERE";
+# path.to.secret = "WRITE-SOMETHING-HERE";
+path.to.secret = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/";
 
 path.humanVerseWSU = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"
 source_url( paste0(path.humanVerseWSU,"master/misc/functions-project-measure.R") );
@@ -161,7 +177,7 @@ source_url( paste0(path.github,"master/libraries/project-measure_libraries.R") )
 	\begin{center}
 	    \scalebox{1.00}{	\includegraphics[trim = 0 0 0 0,clip,width=0.85\textwidth]{pdfs/project-measure-handout.pdf} }
 	\end{center}
-	\label{fig:handout-1}
+	\label{fig:handout}
 	\hrule
 \end{figure}
 
@@ -259,10 +275,30 @@ plot(measure.nba.cluster)
 
 ```{r,appendix-summary,message=FALSE, eval=FALSE}
 
+myData = as.matrix(cbind(measure.X.nba[, -c(1:3)],nba.X[-181:-193,-c(1:3)]));
+myNames = c("Hand Length (cm)", "Hand Width (cm)",  "Height (cm)", "Reach (cm)", "Wingspan (cm)",
+            "Pro Hand Length (cm)", "Pro Hand Width (cm)", "Pro Height (cm)", "Pro Reach (cm)", "Pro Wingspan (cm)");
+
+
+buildLatexCorrelationTable(myData = myData, 
+                                myFile = paste0(getwd(),"/tables/","table-correlation-measure-nba-noR.tex"),
+                                myLabel = "table:correlation",
+                                myCaption = "Descriptive Statistics and Correlation Analysis of Participants and Professionals Scaled to Height",
+                                myNames = myNames,
+                                rotateTable=TRUE,
+                                rowDivider = TRUE,
+                                space.between = "1mm",
+                                width.table = 0.99,
+                                width.names = "1.5cm", # this includes space to M
+                                space.M.SD = "0.5mm",
+                                space.SD.corr = "0.5mm",
+                                showOnes = "center" # options are "center" or "left" or NULL
+                                )
 
 myData2 = as.matrix(cbind(measure.height.Xs[, -c(1:3, 6)],nba.height.Xs[-181:-193,-c(1:3, 6)]));
 myNames2 = c("Hand Length (cm)", "Hand Width (cm)",  "Reach (cm)", "Wingspan (cm)",
             "Pro Hand Length (cm)", "Pro Hand Width (cm)", "Pro Reach (cm)", "Pro Wingspan (cm)");
+
 
 buildLatexCorrelationTable(myData = myData2, 
                                 myFile = paste0(getwd(),"/tables/","table-scale-correlation-measure-nba-noR.tex"),
