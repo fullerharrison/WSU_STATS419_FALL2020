@@ -9,10 +9,10 @@ clean.nba.data <- function(data)
   
   # convert data
   data.handL = data %>%
-  mutate(hand.length.cm = (`Hand.length.(in)`)*2.54);
+  mutate(hand.length.cm = (Hand.length..in.)*2.54);
   
   data.handW = data %>%
-  mutate(hand.width.cm = (`Hand.width.(in)`)*2.54);
+  mutate(hand.width.cm = (Hand.width..in.)*2.54);
   
   # https://stackoverflow.com/questions/54693260/height-conversion-in-r/54693575
   # https://stackoverflow.com/questions/4350440/split-data-frame-string-column-into-multiple-columns/24168383#24168383
