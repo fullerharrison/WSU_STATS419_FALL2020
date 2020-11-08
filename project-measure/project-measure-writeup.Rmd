@@ -30,7 +30,7 @@ abstract: |
   \noindent \emph{Results:}     The ratio of hand length and hand width for professional and average participants is .1 for both groups. In both groups the reach ratio is 1.3 for both groups. The results of wingspan report 1.0 and 1.1 for average participants and professional athletes respectively. \vspace{0.25in}   
   
   
-  \noindent \emph{Conclusions:}     The selection process of professional athletes favors physiological characteristics that reduce the distance required for sport specific interactions. When comparing limb lenghts as a ratio of height, hand length and reach are the only difference attributed to a normal and professional population body proportions. \vspace{0.25in}
+  \noindent \emph{Conclusions:}     The selection process of professional athletes favors physiological characteristics that reduce the distance required for sport specific interactions. When comparing limb lenghts as a ratio of height, hand length and reach are the only difference attributed to a normal and professional population body proportions. Utilizing a ratio basket hight of 1.16 for an average persons will make for more competitive pick-up games. \vspace{0.25in}
   
 sectionnumberdepth: 3
 titleEndnotes: ENDNOTES
@@ -134,10 +134,8 @@ library(devtools);       # required for source_url
 
 # Source libraries and functions
 # 
-#path.to.secret = "";
-path.to.secret = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/";
 
-"/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/__student_access__/_SECRET_/measure-students.txt"
+path.to.secret = "WRITE-SOMETHING-HERE";
 
 path.humanVerseWSU = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/"
 source_url( paste0(path.humanVerseWSU,"master/misc/functions-project-measure.R") );
@@ -280,5 +278,4 @@ buildLatexCorrelationTable(myData = myData2,
                                 space.SD.corr = "0.5mm",
                                 showOnes = "center" # options are "center" or "left" or NULL
                                 )
-
 ```
