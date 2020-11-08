@@ -17,7 +17,7 @@ clean.nba.data <- function(data)
   # https://stackoverflow.com/questions/54693260/height-conversion-in-r/54693575
   # https://stackoverflow.com/questions/4350440/split-data-frame-string-column-into-multiple-columns/24168383#24168383
   data.height = data %>%
-  separate(`Height.w/o.shoes`, c('feet', 'inch'), "'", convert = T) %>%
+  separate(Height.w.o.shoes, c('feet', 'inch'), "'", convert = T) %>%
   mutate(hight.cm = (12*feet + inch)*2.54);
   
   data.reach = data %>%
