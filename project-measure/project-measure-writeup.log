@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.11.6)  8 NOV 2020 13:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.11.6)  8 NOV 2020 23:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -844,42 +844,39 @@ LaTeX Font Warning: Font shape `T1/phv/bx/n' undefined
 (Font)              using `T1/cmr/m/n' instead on input line 345.
 
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 3
-97.
+96.
 (/Users/harrisonfuller/Library/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3
-97.
+96.
 (/Users/harrisonfuller/Library/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-397.
+396.
 (/Users/harrisonfuller/Library/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-397.
+396.
 (/Users/harrisonfuller/Library/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 397.
+(Font)              <10> on input line 396.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 397.
+(Font)              <7> on input line 396.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 397.
+(Font)              <5> on input line 396.
 [1
 
 {/Users/harrisonfuller/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex
 .map}]
-
-LaTeX Warning: Reference `fig:handoutt' on page 2 undefined on input line 464.
-
 <pdfs/OneImage.pdf, id=12, 963.6pt x 542.025pt>
 File: pdfs/OneImage.pdf Graphic file (type pdf)
 <use pdfs/OneImage.pdf>
-Package pdftex.def Info: pdfs/OneImage.pdf  used on input line 486.
+Package pdftex.def Info: pdfs/OneImage.pdf  used on input line 484.
 (pdftex.def)             Requested size: 399.2837pt x 224.59708pt.
 [2 <./pdfs/OneImage.pdf>] [3] (./tables/table-correlation-measure-nba-noR.tex
 Underfull \hbox (badness 10000) in paragraph at lines 40--40
@@ -1008,18 +1005,18 @@ Underfull \hbox (badness 10000) in alignment at lines 36--36
 
 ) [4] [5] [6]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 5
-95.
+92.
 (/Users/harrisonfuller/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 596.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 593.
 [7]
 <pdfs/project-measure-handout.pdf, id=64, 614.295pt x 794.97pt>
 File: pdfs/project-measure-handout.pdf Graphic file (type pdf)
 <use pdfs/project-measure-handout.pdf>
 Package pdftex.def Info: pdfs/project-measure-handout.pdf  used on input line 6
-25.
+23.
 (pdftex.def)             Requested size: 399.29639pt x 516.73651pt.
 [8 <./pdfs/project-measure-handout.pdf>] [9]
 <project-measure-writeup_files/figure-latex/image-proportion-comparison-1.pdf, 
@@ -1029,7 +1026,7 @@ pdf Graphic file (type pdf)
 <use project-measure-writeup_files/figure-latex/image-proportion-comparison-1.p
 df>
 Package pdftex.def Info: project-measure-writeup_files/figure-latex/image-propo
-rtion-comparison-1.pdf  used on input line 708.
+rtion-comparison-1.pdf  used on input line 752.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf, id=84, 469.
 755pt x 325.215pt>
@@ -1037,7 +1034,7 @@ File: project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf Graphic
  file (type pdf)
 <use project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf>
 Package pdftex.def Info: project-measure-writeup_files/figure-latex/appendix-bo
-xplot-1.pdf  used on input line 716.
+xplot-1.pdf  used on input line 760.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <project-measure-writeup_files/figure-latex/appendix-cluster-analysis-1.pdf, id
 =85, 469.755pt x 325.215pt>
@@ -1046,30 +1043,40 @@ f Graphic file (type pdf)
 <use project-measure-writeup_files/figure-latex/appendix-cluster-analysis-1.pdf
 >
 Package pdftex.def Info: project-measure-writeup_files/figure-latex/appendix-cl
-uster-analysis-1.pdf  used on input line 724.
+uster-analysis-1.pdf  used on input line 768.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-[10 <./project-measure-writeup_files/figure-latex/image-proportion-comparison-1
-.pdf>] [11 <./project-measure-writeup_files/figure-latex/appendix-boxplot-1.pdf
->] [12 <./project-measure-writeup_files/figure-latex/appendix-cluster-analysis-
-1.pdf>] [13] (./project-measure-writeup.ent) [14] (./project-measure-writeup.bb
+[10] [11 <./project-measure-writeup_files/figure-latex/image-proportion-compari
+son-1.pdf>] [12 <./project-measure-writeup_files/figure-latex/appendix-boxplot-
+1.pdf>] [13 <./project-measure-writeup_files/figure-latex/appendix-cluster-anal
+ysis-1.pdf>] (./project-measure-writeup.ent) [14] (./project-measure-writeup.bb
 l
-Underfull \hbox (badness 10000) in paragraph at lines 38--45
+Underfull \hbox (badness 10000) in paragraph at lines 32--39
 \T1/lmr/m/n/10 of An-thro-po-met-ric and Fit-ness Test-ing of
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 38--45
+Underfull \hbox (badness 10000) in paragraph at lines 32--39
 \T1/lmr/m/n/10 578.  doi:$10 . 2165 / 00007256-[]200838070-[]00004$.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 38--45
+Underfull \hbox (badness 10000) in paragraph at lines 32--39
 \T1/lmr/m/n/10 URL $http : / / link . springer . com / 10 . 2165 /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--77
+Underfull \hbox (badness 10000) in paragraph at lines 62--71
 \T1/lmr/m/n/10 arttext & pid = S0717-[]95022020000400857 & lng =
+ []
+
+
+Underfull \hbox (badness 7064) in paragraph at lines 73--77
+[]\T1/lmr/m/n/10 NBA, Statis-tics. ????  NBA.com/Stats |
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--77
+\T1/lmr/m/n/10 / / www . nba . com / stats / draft / combine-[]anthro /
  []
 
 
@@ -1096,17 +1103,14 @@ AED: lastpage setting LastPage
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
-LaTeX Warning: There were undefined references.
-
-
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 15098 strings out of 481433
- 232474 string characters out of 5918913
- 618071 words of memory out of 5000000
- 31552 multiletter control sequences out of 15000+600000
+ 15097 strings out of 481433
+ 232460 string characters out of 5918913
+ 618035 words of memory out of 5000000
+ 31551 multiletter control sequences out of 15000+600000
  614337 words of font info for 77 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  77i,15n,84p,777b,537s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1131,7 +1135,7 @@ ler/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></Users/harrison
 fuller/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></Users/harr
 isonfuller/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/
 harrisonfuller/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on project-measure-writeup.pdf (16 pages, 422557 bytes).
+Output written on project-measure-writeup.pdf (16 pages, 420715 bytes).
 PDF statistics:
  191 PDF objects out of 1000 (max. 8388607)
  125 compressed objects within 2 object streams
