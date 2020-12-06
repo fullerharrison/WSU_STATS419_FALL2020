@@ -1,0 +1,392 @@
+---
+title: 'R Notebook: natural language processing (features and svd)'
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    fig_caption: true
+    number_sections: true 
+---
+
+```{r}
+
+library(devtools);
+
+library(humanVerseWSU);
+
+path.github = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/master/";
+
+include.me = paste0(path.github, "misc/functions-nlp.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-str.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-stack.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-pos.R");
+source_url( include.me );
+
+include.me = paste0(path.github, "humanVerseWSU/R/functions-encryption.R");
+source_url( include.me );
+
+
+
+path.to.nascent = "C:/Users/Alexander Nevsky/Dropbox/WSU-419/Fall 2020/__student_access__/unit_02_confirmatory_data_analysis/nascent/";
+
+folder.nlp = "nlp/";
+path.to.nlp = paste0(path.to.nascent, folder.nlp);
+
+########## load data ##########
+
+
+gutenberg.id = 2591;
+
+path.to.gutenberg = paste0(path.to.nlp,"_data_/gutenberg/");
+  createDirRecursive(path.to.gutenberg);
+path.to.grimm = paste0(path.to.gutenberg,gutenberg.id,"/");
+  createDirRecursive(path.to.grimm);
+
+
+local.data.path = path.to.gutenberg; # currently required by grabHTML ... TODO: fix
+
+
+txt.file.remote = "https://www.gutenberg.org/files/2591/2591-0.txt";
+html.file.remote = "https://www.gutenberg.org/files/2591/2591-h/2591-h.htm";
+
+df.grimm = parseGutenberg.GRIMM(path.to.grimm,
+                        file.stem = "fairytales",
+                        txt.file.remote = txt.file.remote,
+                        html.file.remote =html.file.remote,
+                        my.local.path = path.to.gutenberg);
+
+  
+# df.grimm;
+
+########## load stopwords ##########
+
+stop.file.snowball = paste0(path.to.nlp, "stop-templates/snowball.txt");
+
+stop.snowball = trimMe(strsplit( grabHTML(stop.file.snowball), "\r\n")[[1]]);
+
+```
+
+# (NLP) Document Correlations Using SVD and Cosine Similarity
+
+To demonstrate how we can utilize the features, we will examine three basic sets of features (we generated a lot more than this in the last notebook):
+
+- General summary
+- Custom Words
+- POS at 5-grams
+
+We are choosing to analyze each story as its own unit of analysis.  We could analyze each paragraph or sentence if we wanted to get into the minutia.  Since the Brothers GRIMM compiled these stories, maybe we will find correlations among the stories that may suggest a single author wrote one or more stories (linguistic correlations) from which the GRIMM brothers utilized to place in their compilation.
+
+## General summary
+
+```{r}
+## syllables issue
+# one = prepareOneStory(df.grimm, path.to.grimm,
+#                   title = "THE BROTHERS GRIMM FAIRY TALES",
+#                 title.f = "THE.BROTHERS.GRIMM.FAIRY.TALES",
+#                           my.stopwords = stop.snowball
+#                           );
+
+
+
+# if you have the data cached, this will be fast
+my.df = summarizeGeneral(which="ALL", 
+                          df.grimm, path.to.grimm,
+                          my.stopwords = stop.snowball
+                          );
+
+my.df;
+```
+
+Scaling certain columns as necessary.
+
+```{r}
+
+my.df[,5:7] = my.df[,5:7]/my.df[,4];
+
+
+my.df$P.total = rowSums(my.df[,14:22]);
+my.df[,15:22] = my.df[,15:22]/my.df$P.total;
+
+my.df[,24:26] = my.df[,24:26]/my.df[,23];
+my.df[,27:28] = my.df[,27:28]/my.df[,23];
+
+
+my.df[,30:31] = my.df[,30:31]/my.df[,29];
+my.df[,32:33] = my.df[,32:33]/my.df[,29];
+
+```
+
+
+### hclust on rows, columns
+
+```{r}
+
+rownames(my.df) = my.df$title;
+
+include.me = paste0(path.github, "humanVerseWSU/R/functions-EDA.R");
+source_url( include.me );
+
+
+do.nothing = perform.hclust(my.df[,c(-2)], 8, plot.grid=1);
+# do.nothing = perform.hclust(t(my.df[,c(-2)]), 6, plot.grid=1);
+```
+
+### PCA and SVD exploration
+
+SVD ... orthogonal factors ... PCA ... eigen 
+
+```{r}
+
+rownames(my.df) = NULL;
+
+X = my.df[,c(-2)];
+Xs = scale(X);
+
+Xs.how.many = howManyFactorsToSelect(X);
+
+Xs.svd = svd(X, nu = 6, nv = 6);
+
+# plot(my.df.svd$d);
+
+Xs.princomp = stats::princomp(X);
+  summary(Xs.princomp);
+
+biplot(Xs.princomp, 3:4);
+
+```
+
+
+### SVD and cosine similarity
+
+```{r}
+
+library(lsa);  
+# cosine(x);
+Xs.svd = svd(X, nu = 6, nv = 6);
+
+Xs.cos.features = ( round( cosine(Xs.svd$u),2 ) );  
+as.data.frame(Xs.cos.features);
+
+Xs.cos.stories = ( round( cosine(t(Xs.svd$u)),2 ) ); 
+  rownames(Xs.cos.stories) = my.df$title;
+  colnames(Xs.cos.stories) = my.df$title;
+as.data.frame(Xs.cos.stories);
+
+```
+
+```{r}
+
+do.nothing = perform.hclust(X, 6, dist.method = Xs.cos.stories, dist.p="cosine", plot.grid=1);
+
+
+```
+
+
+
+
+## Custom words
+
+```{r}
+
+my.df = summarizeCustom(which="ALL", df.grimm);
+
+my.df;
+```
+
+This matrix is called a term-frequency matrix.  The rows are the "stories," the columns are the "words" or features.  Within a cell element, is the number of occurrences (the frequency) of words.  We could truncate and remove values with lots of zeroes, by reviewing column sums.
+
+When we scale this type of data, there are two elements that matter, the "term frequency" (tf) and the "document frequency" (df).  We will update the matrix to account for these options.  See <https://en.wikipedia.org/wiki/Tf%E2%80%93idf>.
+
+The overall scaling is called the tf-idf (term frequency - inverse document frequency):
+
+- tf is a function of t, d
+
+We could do a binary result (0, 1); we are currently doing the raw count.  The easiest transform is the "log normalization" and I recommend using this option.
+
+```{r}
+X = as.matrix(my.df);
+
+# we have and/or in this list ... it will dominate ... it would be useful as an isolated analysis ... but let's keep it all in for now ...
+
+library(matrixStats);
+words.in.doc = rowSums2(X);
+maxfreq.in.doc = rowMaxs(X);
+
+n.word = ncol(X);
+n.docs = nrow(X);
+
+tf.raw = X;
+
+tf.bin = X;
+tf.bin[X > 0] = 1;
+
+tf.s = X / words.in.doc;
+  
+tf.logn = log(1 + X);
+tf.logn2 = 0.5 + 0.5 * X / maxfreq.in.doc;
+
+```
+
+- idf is a function of t, d, and D
+
+What is the commonality of the word across all documents.
+
+```{r}
+X = as.matrix(my.df);
+
+term.in.corpus = colCounts(X);
+
+n.t = 1 + term.in.corpus;
+
+idf.un = 1;
+
+idf.s = log(n.docs / n.t);
+idf.smooth = log(n.docs / (1 + n.t)) + 1;
+idx.prob = log( (n.docs - n.t) / n.t);
+
+```
+
+- tfidf is computed based on the individual choices of tf and idf
+
+```{r}
+
+X.tf.logn.idf.s = tf.logn / idf.s;
+
+X.tf.s.idf.un =  tf.s / idf.un;
+
+```
+
+
+
+### hclust and SVD
+
+Clearly the scaling is changing the results.
+
+FAIRY TALES (the intro) should be an isolate.
+
+Keeping "and" is going to influence the results.
+
+#### Raw counts
+```{r}
+do.nothing = perform.hclust(X, 8, plot.grid=1);
+
+Xs.svd = svd(X, nu = 8, nv = 8);
+
+Xs.cos.stories = ( round( cosine(t(Xs.svd$u)),2 ) ); 
+  rownames(Xs.cos.stories) = my.df$title;
+  colnames(Xs.cos.stories) = my.df$title;
+as.data.frame(Xs.cos.stories);
+
+do.nothing = perform.hclust(X, 8, dist.method = Xs.cos.stories, dist.p="cosine", plot.grid=1);
+```
+
+
+#### Common scaling
+
+```{r}
+do.nothing = perform.hclust(X.tf.logn.idf.s, 8, plot.grid=1);
+
+
+Xs.svd = svd(X.tf.logn.idf.s, nu = 8, nv = 8);
+
+Xs.cos.stories = ( round( cosine(t(Xs.svd$u)),2 ) ); 
+  rownames(Xs.cos.stories) = my.df$title;
+  colnames(Xs.cos.stories) = my.df$title;
+as.data.frame(Xs.cos.stories);
+
+do.nothing = perform.hclust(X.tf.logn.idf.s, 8, dist.method = Xs.cos.stories, dist.p="cosine", plot.grid=1);
+
+```
+
+#### Within-story scaling
+
+```{r}
+do.nothing = perform.hclust(X.tf.s.idf.un, 8, plot.grid=1);
+
+
+
+
+Xs.svd = svd(X.tf.s.idf.un, nu = 8, nv = 8);
+
+Xs.cos.stories = ( round( cosine(t(Xs.svd$u)),2 ) ); 
+  rownames(Xs.cos.stories) = my.df$title;
+  colnames(Xs.cos.stories) = my.df$title;
+as.data.frame(Xs.cos.stories);
+
+do.nothing = perform.hclust(X.tf.s.idf.un, 8, dist.method = Xs.cos.stories, dist.p="cosine", plot.grid=1);
+
+
+```
+
+### Comments
+
+Notice that data reduction cleans up some of the branch-isolation noise.  I would consider updating the original vector list (e.g., remove "and"), and passing it into the function.
+
+I created this list based on my perception of GRIMM stories.  It is of note to recognize that the terms are common across all documents.  In the last example, we have to create a common list of features and do some sorting and organizing.
+
+
+
+## POS - 5 grams
+
+We will now example some linguistic features, a string of word ".tags" [I need to update the caching mechanism to cache based on the "n-grams" analyzed, I did 5 for this setup.]
+
+```{r}
+my.df = summarizeMatrix.POS(which="ALL", df.grimm,
+					path.to.grimm, my.stopwords = stop.snowball, 
+					nfeature=".tags", ngrams=5 );
+  
+  
+dim(my.df);
+```
+
+
+We have lots of features, let's truncate based on a minimum appearance of being in at least N of the documents.
+
+```{r}
+X = as.matrix(my.df);
+term.in.corpus = colCounts(X);
+
+for(i in 1:10)
+  {
+  print(paste0("i: ",i," ---->", sum(term.in.corpus == i) ));
+  }
+
+# let's truncate to appearing 3 or more times
+idx = which(term.in.corpus < 3);
+
+X.trunc = X[,-c(idx)];
+dim(X.trunc);
+```
+We are now in a more manageble term-feature space.  However, this is still way to big to run hclust directly, so let's build some tf-idf, and svd to analyze ...
+
+## SVD and cosine similarity
+
+```{r}
+
+tf.s = X.trunc / words.in.doc;
+idf.un = 1;
+X.tf.s.idf.un =  tf.s / idf.un;
+
+# we could try values from a few (8) to hundreds
+Xs.svd = svd(X.tf.s.idf.un, nu = 24, nv = 24);
+
+Xs.cos.stories = ( round( cosine(t(Xs.svd$u)),2 ) ); 
+  rownames(Xs.cos.stories) = my.df$title;
+  colnames(Xs.cos.stories) = my.df$title;
+as.data.frame(Xs.cos.stories);
+
+do.nothing = perform.hclust(X.tf.s.idf.un, 8, dist.method = Xs.cos.stories, dist.p="cosine", plot.grid=1);
+
+```
+
+Similarity now would be linked to a string of 5 POS elements.  They would share linguistic style, data reduced.  
+
+Little Red Riding Hood and White Snake?
+
+-- TODO -- 
+Change up the matrix of words in CUSTOM, and run that result.

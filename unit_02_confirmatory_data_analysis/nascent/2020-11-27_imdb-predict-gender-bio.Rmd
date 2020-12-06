@@ -1,0 +1,535 @@
+---
+title: 'R Notebook: IMDB (predict gender from biography)'
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    toc_depth: 5
+    fig_caption: true
+    number_sections: true 
+---
+
+```{r}
+
+library(devtools);
+
+library(humanVerseWSU);
+
+path.github = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/master/";
+
+include.me = paste0(path.github, "misc/functions-nlp.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-str.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-stack.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-pos.R");
+source_url( include.me );
+
+include.me = paste0(path.github, "humanVerseWSU/R/functions-encryption.R");
+source_url( include.me );
+
+
+
+path.to.nascent = "C:/Users/Alexander Nevsky/Dropbox/WSU-419/Fall 2020/__student_access__/unit_02_confirmatory_data_analysis/nascent/";
+
+folder.nlp = "nlp/";
+path.to.nlp = paste0(path.to.nascent, folder.nlp);
+
+
+###### UPDATES TO dataframe subset function ######
+# inflation adjustments for NA ... and improvements on subsetting
+include.me = paste0(path.github, "humanVerseWSU/R/functions-dataframe.R");
+source_url( include.me );
+
+include.me = paste0(path.github, "humanVerseWSU/R/functions-inflation.R");
+source_url( include.me );
+
+```
+
+# (IMDB) Custom library
+
+This is a large dataset I harvested in September.  It will allow us to explore more comprehensively the relationships of various features of the movie database.  It is large (about 50MB), so installing may take some time if you are on a slow internet connection.
+
+This dataset will be the source you will use on your final exam to answer the question posed earlier in the semester about Will Smith and Denzel Washington.  You now have more analytics skills and with the new dataset there are more features you can extract.
+
+```{r}
+# library(devtools);
+# install_github("MonteShaffer/imdb/imdb"); # choose #3 to humanVerseWSU
+# detach(package:imdb);
+library(imdb);
+packageVersion("imdb");  # ‘0.1.1’
+# ?loadDataIMDB
+```
+
+## Load data
+
+Once this is run, a lot of memory will be required to read in the 23 compressed files.
+
+```{r}
+imdb::loadDataIMDB();
+names(imdb.data);
+
+humanVerseWSU::loadInflationData();
+```
+
+A global variable is automatically created with several dataframes.
+
+
+### Data Dictionary
+
+#### Movie Count by Year
+
+
+```{r}
+plot(imdb.data$moviecount.byyear, type="b", pch=19);
+```
+
+Even though I harvested this data in September 2020, it seems there was a movie fall-off in 2019, before COVID.  Often this can be understood using change-point analyses.  Maybe it is linked to a "Trump-factor"; the media suggests that money is moved from block-buster movies into streaming options (Netflix, and so on).  It is an interesting question.
+
+
+#### Lists: movies
+
+- all :: defined as the unique "ttid"s of all other lists
+
+```{r}
+length(imdb.data$movies$all);
+head(imdb.data$movies$all, 20);
+```
+
+- top250 :: < https://www.imdb.com/chart/top> Accessed September 2020.
+
+```{r}
+length(imdb.data$movies$top250);
+head(imdb.data$movies$top250, 20);
+```
+
+- popular50 (dataframe) :: top-50 most popular for each year (by votes)
+
+```{r}
+dim(imdb.data$movies$popular50);
+names(imdb.data$movies$popular50);
+head(imdb.data$movies$popular50, 20);
+```
+
+
+- gem50 (dataframe) :: top-50 highest rated for each year (by ratings)
+
+```{r}
+dim(imdb.data$movies$gem50);
+names(imdb.data$movies$gem50);
+head(imdb.data$movies$gem50, 20);
+```
+
+- tt5000 :: numeric movie ids from 1:5000 several bad ones ... length is less than that.
+
+```{r}
+length(imdb.data$movies$tt5000);
+head(imdb.data$movies$tt5000, 20);
+```
+
+#### Lists: actors
+
+- all :: defined as the unique "nmid"s of all other lists
+
+```{r}
+length(imdb.data$actors$all);
+head(imdb.data$actors$all, 20);
+```
+
+
+- top250 :: < https://www.imdb.com/chart/top> Accessed September 2020.  These are the actors on those movies
+
+```{r}
+length(imdb.data$actors$top250);
+head(imdb.data$actors$top250, 20);
+```
+
+- popular50 :: top-50 most popular for each year (by votes)
+
+```{r}
+length(imdb.data$actors$popular50);
+head(imdb.data$actors$popular50, 20);
+```
+
+
+- gem50 :: top-50 highest rated for each year (by ratings)
+
+```{r}
+length(imdb.data$actors$gem50);
+head(imdb.data$actors$gem50, 20);
+```
+
+- tt5000 :: numeric movie ids from 1:5000 several bad ones ... length is less than that.
+
+```{r}
+length(imdb.data$actors$tt5000);
+head(imdb.data$actors$tt5000, 20);
+```
+
+- nm5000 :: numeric actor ids from 1:5000 several bad ones ... length is less than that.
+
+```{r}
+length(imdb.data$actors$nm5000);
+head(imdb.data$actors$nm5000, 20);
+```
+
+- headliners :: actors that were the "headliners" in 15 or more movies (from `imdb.data$glue$movies.creatives`).  This is equivalent to `imdb.data$headliners$actors`.
+
+```{r}
+length(imdb.data$actors$headliners);
+head(imdb.data$actors$headliners, 20);
+```
+
+#### Lists: headliners
+
+A headliner has a lot of experience as a top-3 (either writer, director, actor, or company);
+
+- actors :: actors that were the "headliners" in 15 or more movies
+
+```{r}
+length(imdb.data$headliners$actors);
+head(imdb.data$headliners$actors, 20);
+```
+
+- directors :: directors that were the "headliners" in 15 or more movies
+
+```{r}
+length(imdb.data$headliners$directors);
+head(imdb.data$headliners$directors, 20);
+```
+
+
+- writers :: writers that were the "headliners" in 15 or more movies
+
+```{r}
+length(imdb.data$headliners$writers);
+head(imdb.data$headliners$writers, 20);
+```
+
+
+- companies :: companies that were the "headliners" in 15 or more movies
+
+```{r}
+length(imdb.data$headliners$companies);
+head(imdb.data$headliners$companies, 20);
+```
+
+
+
+
+
+
+#### Companies
+These are the (at most) top-3 company credits plus the (at most) top-3 actors found in the "Details" section of a movie page.
+
+```{r}
+dim(imdb.data$all.movies.companies);
+names(imdb.data$all.movies.companies);
+head(imdb.data$all.movies.companies, 20);
+```
+
+
+#### Creatives
+These are the (at most) top-3 creatives plus the (at most) top-3 actors found at the top of a movie page.
+
+```{r}
+dim(imdb.data$all.movies.creatives);
+names(imdb.data$all.movies.creatives);
+head(imdb.data$all.movies.creatives, 20);
+```
+
+#### Actors: Info (e.g., Bio)
+This is data from the top of an actor's (any creative really) page: <https://www.imdb.com/name/nm0000115/>
+
+
+
+```{r}
+dim(imdb.data$all.actors.info);
+names(imdb.data$all.actors.info);
+head(imdb.data$all.actors.info, 20);
+```
+
+#### Actor on Movie: Rank & Character Name
+These are the (at most) top-3 creatives plus the (at most) top-3 actors found at the top of a movie page.
+
+```{r}
+dim(imdb.data$all.movies.actors.characters);
+names(imdb.data$all.movies.actors.characters);
+head(imdb.data$all.movies.actors.characters, 20);
+```
+
+#### Movie Info: from Actor Search Page
+This contains ratings, dollars, votes, and other features we used in the earlier homework.
+
+```{r}
+dim(imdb.data$all.actors.movies);
+names(imdb.data$all.actors.movies);
+head(imdb.data$all.actors.movies, 20);
+```
+
+#### Actor's movie Rank
+An actor has a ranking of their movies based on popularity (by votes), see <https://www.imdb.com/filmosearch/?explore=title_type&role=nm0000243&ref_=filmo_ref_typ&sort=num_votes,desc&mode=detail&page=1&title_type=movie>
+
+Will Smith's most popular film is I am Legend, Rank 1.  Can also be achieved by analyzing and sorting "votes" or "stars" or "metacritic"...
+
+```{r}
+dim(imdb.data$all.actors.rank);
+names(imdb.data$all.actors.rank);
+head(imdb.data$all.actors.rank, 20);
+```
+
+#### Glue Table: Top-Creatives
+
+For example "tt2671706" has Denzel Washington ("nm0000243") as "director" and "actor" ...
+
+```{r}
+dim(imdb.data$glue$movies.creatives);
+names(imdb.data$glue$movies.creatives);
+head(imdb.data$glue$movies.creatives, 20);
+```
+
+## Extra data
+
+I added three dataframes to the dataset (November 27, 2020), so we have all of the Will/Denzel movies and their information.
+
+- `movies.df$cast`
+
+```{r}
+dim(imdb.data$movies.df$cast);
+names(imdb.data$movies.df$cast);
+head(imdb.data$movies.df$cast, 20);
+```
+
+- `movies.df$text`
+
+```{r}
+dim(imdb.data$movies.df$text);
+names(imdb.data$movies.df$text);
+head(imdb.data$movies.df$text, 20);
+```
+
+
+- `movies.df$info`
+
+```{r}
+dim(imdb.data$movies.df$info);
+names(imdb.data$movies.df$info);
+head(imdb.data$movies.df$info, 20);
+```
+
+
+## Will Smith
+
+The function `IMDB.getMoviesForPerson` requires a known "nmid" value.  We can search for it:
+
+```{r}
+
+will.search = IMDB.searchPersonName("Will* Smith*");
+
+will.search;
+```
+
+### Movies
+```{r}
+will.nmid = will.search$nmid[1];
+will.nmid = "nm0000226";
+will.movies = IMDB.getMoviesForPerson(will.nmid);
+will.movies;
+will.movies.ttid = will.movies$ttid;
+```
+
+### Rankings: Lots of Ways to Internally Rank
+```{r}
+# we could rank on other columns ...
+
+# loadInflationData();
+will.movies = standardizeDollarsInDataFrame(will.movies, 2000, "millions", "year", "millions2000");
+
+# adjust for inflation ...
+will.movies = sortDataFrameByNumericColumns(will.movies, "millions2000", "DESC");  ## NA's go to end ...
+will.movies$rank.money = 1:nrow(will.movies);
+
+
+will.movies = sortDataFrameByNumericColumns(will.movies, "minutes", "DESC");
+will.movies$rank.minutes = 1:nrow(will.movies);
+
+
+will.movies = sortDataFrameByNumericColumns(will.movies, "ratings", "DESC");
+will.movies$rank.ratings = 1:nrow(will.movies);
+
+will.movies = sortDataFrameByNumericColumns(will.movies, "metacritic", "DESC");
+will.movies$rank.metacritic = 1:nrow(will.movies);
+
+will.movies = sortDataFrameByNumericColumns(will.movies, "votes", "DESC");
+will.movies$rank.votes = 1:nrow(will.movies);
+
+will.movies = sortDataFrameByNumericColumns(will.movies, "year", "ASC");
+will.movies$rank.year = 1:nrow(will.movies);
+
+
+will.movies;
+```
+
+
+We now have all the movies, not just the top 50.  This data is similar to what we had in our earlier assignments.  We now have a bit more data.
+
+
+### Unique Character Names
+```{r}
+will.characters = IMDB.getUniqueCharactersForPerson(will.nmid);
+will.characters;
+```
+
+Unless he plays another gender in a film (e.g., Adam Sandler playing a woman), we could use this information for a classifer as a dictionary.  Or we could just build a classifier from the biography.
+
+### Gender
+```{r}
+will.bio = will.search$bio[1];
+
+# you could get just his record with 
+will.info = IMDB.getPersonInfo(will.nmid);
+# doesn't rely on the search ...
+# imdb$all.actors.info
+
+will.bio;
+
+gender = list();
+gender[["male"]] = c("he", "his", "him");
+gender[["female"]] = c("she", "hers", "her");
+
+```
+We could use more features than the above, but the IMDB bio template seems to utilize these gender words.  And, if a relative (e.g., mother or brother) is mentioned, it my confuse our classifier.
+
+```{r}
+
+predictGenderFromBio = function(bio, gender = list(
+            "male" = c("he", "his", "him"), 
+          "female" = c("she", "hers", "her")) )
+  {
+  bio = gsub("(","",bio,fixed=TRUE);
+  bio = gsub(")","",bio,fixed=TRUE);
+  bio = gsub('"',"",bio,fixed=TRUE);
+  
+  words = getRawWords(bio); # from nlp, converts to lower
+  
+  mycounts = list("male" = 0, "female" = 0);
+  tc = 0;
+  gc = 2;
+  for(i in 1:gc)
+    {
+    key = names(gender)[i]; 
+    for(j in 1:length(gender[[key]]))
+      {
+      mc = sum(words == gender[[key]][j]);  
+      mycounts[[key]] = mc + mycounts[[key]];
+      tc = mc + tc;
+      }
+    }
+  # mycounts;
+  # we could return a ratio ... but a decision for this example would likely be best ...
+  if(tc == 0) { return (NA); } # no data ...
+  result = "male"; # default in hollywood?
+  if(mycounts$female > mycounts$male) { result = "female"; }
+  result;
+  }
+
+
+will.gender = predictGenderFromBio(will.bio); 
+will.gender;
+```
+
+### Actor Ranking on Given Film
+```{r}
+ttid.legend = "tt0480249";
+rank.legend = subsetDataFrame(imdb.data$all.movies.actors.characters, "ttid", "==", ttid.legend);
+rank.legend;
+```
+
+### Will's Rankings on Some Films
+
+This is based on the number of movies in the database from which we grabbed the full movie-info page.  If you review how that list was created, it was based on top-50 films each year (either on rating or votes).
+
+```{r}
+will.rank = subsetDataFrame(imdb.data$all.movies.actors.characters, "nmid", "==", will.nmid);
+will.rank;
+```
+
+We see that 35 of his 111 films are in this dataset.
+
+
+### Movie Details
+See <http://md5.mshaffer.com/WSU_STATS419/01_imdb-monte.html>.
+
+See <http://md5.mshaffer.com/WSU_STATS419/02_imdb-monte.html>.
+
+```{r}
+
+ttid.legend = will.movies$ttid[1];  # I am legend
+ttid.legend = "tt0480249";
+
+info.legend = IMDB.getMovieInfoFromActorSearch(ttid.legend);
+info.legend;  # this is the same dataframe as the search for will above
+
+# now we have nmid and ttid, we can access other data directly ...
+
+# names(imdb.data);
+
+creatives = subsetDataFrame(imdb.data$all.movies.creatives, "ttid", "==", ttid.legend);
+creatives; # these are top billed
+
+companies = subsetDataFrame(imdb.data$all.movies.companies, "ttid", "==", ttid.legend);
+companies;
+
+# this is the TOP-15 with character name ...
+actors = subsetDataFrame(imdb.data$all.movies.actors.characters, "ttid", "==", ttid.legend); 
+actors;
+
+# imdb.data$all.actors.rank
+# there is another dataframe that will show more than 15 persons, because those "actors" were linked back to this same movie ...
+others = subsetDataFrame(imdb.data$all.actors.rank, "ttid", "==", ttid.legend); 
+others;  # there are 40 persons in the dataset with various "roles":  actors, directors, stunt men ... that is because they showed up in another film as an actor, and a comprehensive search was done on them, for all their roles...
+```
+
+### Movie Details: Extra
+
+
+```{r}
+will2 = merge(will.movies, imdb.data$movies.df$info, by="ttid");
+will2;
+```
+
+We now have data for all of his movies ....
+
+
+```{r}
+ttid.legend = "tt0480249";
+
+cast = subsetDataFrame(imdb.data$movies.df$cast, "ttid", "==", ttid.legend); 
+cast;
+
+info = subsetDataFrame(imdb.data$movies.df$info, "ttid", "==", ttid.legend); 
+info;
+# notice the money is not yet numeric, some cleansing may be required
+# some elements in the column are in "other currencies"
+
+text = subsetDataFrame(imdb.data$movies.df$text, "ttid", "==", ttid.legend); 
+text;
+```
+
+## Denzel Washington
+
+[I would suggest reviewing Will and seeing how many features you can extract, then copy those same features here, as you do Denzel.
+
+The more features for comparison, the better.  Even if the features don't align with your final answer, you can use langauge like:  although Denzel was in more top-50 movies by year (as a proportion), ... THAT would be an example if your final answer is TEAM WILL
+
+]
+
+-- TODO --
+
+# Conclusion
+
+We now have all of the movie information for each of these two actors.  And you can possibly predict gender.  Think of some gender-specific features you could consider:  how many headliners with Will/Denzel are the same-sex?  Opposite sex?  What about the cast?  What about the extended cast (others = 40)?
+
+

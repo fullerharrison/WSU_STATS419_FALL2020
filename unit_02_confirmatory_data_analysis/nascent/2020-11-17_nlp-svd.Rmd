@@ -1,0 +1,108 @@
+---
+title: 'R Notebook: natural language processing (features and svd)'
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    fig_caption: true
+    number_sections: true 
+---
+
+```{r}
+
+library(devtools);
+
+library(humanVerseWSU);
+
+path.github = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/master/";
+
+include.me = paste0(path.github, "misc/functions-nlp.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-str.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-stack.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-pos.R");
+source_url( include.me );
+
+include.me = paste0(path.github, "humanVerseWSU/R/functions-encryption.R");
+source_url( include.me );
+
+
+
+path.to.nascent = "C:/Users/Alexander Nevsky/Dropbox/WSU-419/Fall 2020/__student_access__/unit_02_confirmatory_data_analysis/nascent/";
+
+folder.nlp = "nlp/";
+path.to.nlp = paste0(path.to.nascent, folder.nlp);
+
+
+```
+
+# (NLP) Feature Extraction
+
+
+# THE BROTHERS GRIMM FAIRY TALES
+
+```{r}
+gutenberg.id = 2591;
+
+path.to.gutenberg = paste0(path.to.nlp,"_data_/gutenberg/");
+  createDirRecursive(path.to.gutenberg);
+path.to.grimm = paste0(path.to.gutenberg,gutenberg.id,"/");
+  createDirRecursive(path.to.grimm);
+
+
+local.data.path = path.to.gutenberg; # currently required by grabHTML ... TODO: fix
+
+
+txt.file.remote = "https://www.gutenberg.org/files/2591/2591-0.txt";
+html.file.remote = "https://www.gutenberg.org/files/2591/2591-h/2591-h.htm";
+
+df.grimm = parseGutenberg.GRIMM(path.to.grimm,
+                        file.stem = "fairytales",
+                        txt.file.remote = txt.file.remote,
+                        html.file.remote =html.file.remote,
+                        my.local.path = path.to.gutenberg);
+
+  
+df.grimm;
+```
+
+## Features 
+
+
+### Story-level data
+
+```{r}
+my.df = summarizeGeneral(which="HANSEL AND GRETEL", 
+                          df.grimm, path.to.grimm, 
+                          my.stopwords = stop.snowball
+                          );
+
+my.df;
+```
+
+```{r}
+my.df = summarizeGeneral(which=20:22, 
+                          df.grimm, path.to.grimm, 
+                          my.stopwords = stop.snowball
+                          );
+
+my.df;
+```
+
+
+### Sentence-level data
+We need to decide on our unit of analysis.  We could analyze each "sentence" but as I debug, there are some sentences with one word, so if we did so, we would want to throw out "very short" sentences.
+
+
+
+
+
+
+
+
+
+

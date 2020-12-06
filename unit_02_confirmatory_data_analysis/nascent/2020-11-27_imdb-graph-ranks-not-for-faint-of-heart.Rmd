@@ -1,0 +1,402 @@
+---
+title: 'R Notebook: IMDB (predict gender from biography)'
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    toc_depth: 5
+    fig_caption: true
+    number_sections: true 
+---
+
+```{r}
+
+library(devtools);
+
+library(humanVerseWSU);
+
+path.github = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/master/";
+
+# include.me = paste0(path.github, "misc/functions-nlp.R");
+# source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-str.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-stack.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-pos.R");
+source_url( include.me );
+
+include.me = paste0(path.github, "humanVerseWSU/R/functions-encryption.R");
+source_url( include.me );
+
+
+
+path.to.nascent = "/Users/harrisonfuller/OneDrive - Washington State University (email.wsu.edu)/Classes/STATS 419/WSU_STATS419_FALL2020/unit_02_confirmatory_data_analysis/nascent/";
+
+folder.nlp = "nlp/";
+path.to.nlp = paste0(path.to.nascent, folder.nlp);
+
+
+###### UPDATES TO dataframe subset function ######
+# inflation adjustments for NA ... and improvements on subsetting
+include.me = paste0(path.github, "humanVerseWSU/R/functions-dataframe.R");
+source_url( include.me );
+
+include.me = paste0(path.github, "humanVerseWSU/R/functions-inflation.R");
+source_url( include.me );
+
+```
+
+# (IMDB) Social Network
+
+## IMDB data
+
+Back to the research question, after a bit of a detour.  Can we apply this method to ascertain the "rank" of movies and actors.  Let's give it a try.  First, remember, we need an adjacency matrix, with movies-linking-to-movies or actors-linking-to-actors.  It needs to be row/col symmetric in form (although the elements of the matrix do not need to be symmetric).
+
+We don't have that form yet.  We can build a matrix with actors in the rows and movies in the columns; or vice versa.  So what can we do.
+
+### Build the relationships of actors-movies
+
+Choosing how to define (or truncate the matrix) may influence the results, but not by much.  A dud movie/actor will still be a dud.
+
+So let's take the new movie-actor collection and build a matrix.  For now, we will only place a binary value (0 or 1) to represent a link between an actor and a movie.  We may later weight the values based on being a headliner or a director or whatever.
+
+```{r}
+library(imdb);
+packageVersion("imdb");  # ‘0.1.1’
+
+imdb::loadDataIMDB();
+names(imdb.data);
+```
+
+```{r}
+network = imdb.data$movies.df$cast;
+dim(network);
+names(network);
+
+n.ttid = length(unique(network$ttid));
+n.nmid = length(unique(network$nmid));
+
+my.ttids = sort( unique(network$ttid) );
+my.nmids = sort( unique(network$nmid) );
+```
+We have a network of 10,193 movies and 64,666 actors (not including creatives).  This is a big matrix, but is likely sparse ... let's see if R can handle it as-is.  If not, there are "sparse-matrix" techniques we could utilize.
+
+I call the matrix "AM" actors for rows, movies for columns.
+
+```{r}
+# AM = matrix(0, nrow=n.nmid, ncol=n.ttid);
+#   rownames(A) = my.nmids;
+#   colnames(A) = my.ttids;
+# dim(AM);
+# AM[1:10,1:5];
+```
+This next step will be time-consuming... We have to loop through each record of the network cast dataframe, grab the ttid and nmid, figure out the corresponding row/col and populate with a 1.
+
+We only have 120,678 entries and our matrix is 64666 * 10193 = 659,140,538 elements.  That is 0.0183% sparse.
+
+```{r}
+# nrow = nrow(network);
+# nrow;
+# 
+# for(i in 1:nrow)
+#   {
+#   if(i %% 25000 == 1) { print(i); flush.console();}
+#   row = network[i,];
+#   ttid = row$ttid;
+#   nmid = row$nmid;
+#   
+#   r = which(my.nmids == nmid);
+#   c = which(my.ttids == ttid);
+#   AM[r,c] = 1;
+#   }
+# 
+# sum(AM);
+```
+
+### AA from AM
+
+I can build an actor-actor matrix by multiplying the AM matrix by its transpose.
+
+```{r}
+# AA = AM %*% t(AM);
+# dim(AA);
+```
+
+
+### MM from AM
+
+I can build an actor-actor matrix by multiplying the AM matrix by its transpose.
+
+```{r}
+# MM = t(AM) %*% (AM);
+# dim(MM);
+```
+
+
+I am going to augment to the last row, easier to accomplish.
+
+
+## IMDB data (v 2)
+Based on a night's sleep and the video on advanced feature, I want to prevent "gaming" by creating a level playing field.  Increasing N and introducing randomness is how you game PageRank; the patent network makes such gaming more challening and expensive, but possible (e.g., Canon's inkjet printers).  
+
+If we use the top50 as the key for the network, it is constrained and the links are within the "best" as defined by popular50.
+
+We expected WILL to have 19 movies, it appears he has 16; we expected DENZEL to have 19 movies, it appears he has 18.
+
+
+
+```{r}
+# library(imdb);
+# packageVersion("imdb");  # ‘0.1.1’
+# 
+# imdb::loadDataIMDB();
+# names(imdb.data);
+```
+
+```{r}
+df = subsetDataFrame(imdb.data$movies$popular50, "year", ">=", 1980);
+df = subsetDataFrame(df, "year", "<", 2020);
+ttids = df$ttid;
+dim(df);
+```
+
+```{r}
+df.cast = merge(df, imdb.data$movies.df$cast, by="ttid");
+dim(df.cast);
+length(unique(df.cast$ttid));
+length(unique(df.cast$nmid));
+```
+We have a full dataset, about 2000 movies and 29,601 actor-links.  We have about 17,150 unique actors.
+
+```{r}
+network = df.cast;
+n.ttid = length(unique(network$ttid));
+n.nmid = length(unique(network$nmid));
+
+my.ttids = sort( unique(network$ttid) );
+my.nmids = sort( unique(network$nmid) );
+```
+
+
+```{r}
+AM = matrix(0, nrow=n.nmid, ncol=n.ttid);
+  rownames(AM) = my.nmids;
+  colnames(AM) = my.ttids;
+dim(AM);
+AM[1:10,1:5];
+```
+
+We only have 29,601 entries and our matrix is 17149 * 1998 = 34,263,702 elements.  That is 0.0863% sparse.
+
+```{r}
+nrow = nrow(network);
+nrow;
+
+for(i in 1:nrow)
+  {
+  if(i %% 25000 == 1) { print(i); flush.console();}
+  row = network[i,];
+  ttid = row$ttid;
+  nmid = row$nmid;
+
+  r = which(my.nmids == nmid);
+  c = which(my.ttids == ttid);
+  AM[r,c] = 1;
+  }
+
+sum(AM);
+```
+
+### AA from AM
+
+I can build an actor-actor matrix by multiplying the AM matrix by its transpose.
+
+```{r}
+# timer.start = as.numeric(Sys.time());
+# AA = AM %*% t(AM);
+# timer.end = as.numeric(Sys.time());
+# elapsed = round(timer.end - timer.start,2);
+# print(paste0("Time: ", elapsed, " secs"));  # "Time: 392.57 secs"
+# dim(AA);
+```
+
+
+### MM from AM
+
+I can build an actor-actor matrix by multiplying the AM matrix by its transpose.
+
+```{r}
+# timer.start = as.numeric(Sys.time());
+# MM = t(AM) %*% (AM);
+# timer.end = as.numeric(Sys.time());
+# elapsed = round(timer.end - timer.start,2);
+# print(paste0("Time: ", elapsed, " secs")); # "Time: 45.83 secs"
+# dim(MM); 
+```
+
+### CPP for SPEED
+<https://stackoverflow.com/questions/35923787/fast-large-matrix-multiplication-in-r?noredirect=1&lq=1>
+
+I have used "Eigen" before to do this matrix math.  We are still struggling with base-R, so let's try and see if we can speed things up.
+
+```{r}
+include.me = paste0(path.github, "humanVerseWSU/R/functions-file.R");
+source_url( include.me );
+this.path = getDirectoryOfThisFile();  # will work in RStudio
+setwd(this.path);
+this.path = path.to.nascent;
+
+# Requires Rtools on Windoze
+# install.packages("RcppEigen", type="source");
+# install.packages("RcppArmadillo", type="source");
+
+library(Rcpp)
+
+A <- matrix(rnorm(10000), 100, 100) # fully populated, 100 x 100, relatively small
+B <- matrix(rnorm(10000), 100, 100)
+
+library(microbenchmark)
+# I added "Trans" for Matrix Transpose to this example code.
+sourceCpp("multiply.cpp") 
+microbenchmark(eigenMatTrans(A),A%*%B, armaMatMult(A, B), eigenMatMult(A, B), eigenMapMatMult(A, B))
+
+```
+
+### AAM from AM (C++)
+
+I need a transpose as well: <https://eigen.tuxfamily.org/dox/classEigen_1_1Transpose.html>
+
+```{r}
+timer.start = as.numeric(Sys.time());
+# AA = AM %*% t(AM);
+AM.t = eigenMatTrans(AM);
+AA = eigenMatMult(AM, AM.t);
+rownames(AA) = colnames(AA) = my.nmids;
+timer.end = as.numeric(Sys.time());
+elapsed = round(timer.end - timer.start,2);
+print(paste0("Time: ", elapsed, " secs"));  # "Time: 392.57 secs"
+dim(AA);
+```
+C++ took it from 392 seconds (6.5 minutes) to 15 seconds.  ["Time: 14.8 secs"] ... 26.5 times faster ...
+
+
+```{r}
+timer.start = as.numeric(Sys.time());
+# MM = t(AM) %*% (AM);
+MM = eigenMatMult(AM.t, AM);
+rownames(MM) = colnames(MM) = my.ttids;
+timer.end = as.numeric(Sys.time());
+elapsed = round(timer.end - timer.start,2);
+print(paste0("Time: ", elapsed, " secs")); # "Time: 45.83 secs"
+dim(MM);
+```
+
+C++ took it from 46 seconds to 2 seconds.  ["Time: 14.8 secs"] ... 21 times faster ...
+
+
+### Will Smith first-contacts, zero-degrees of separation
+```{r}
+nmid = "nm0000226";
+idx = which(rownames(AA)==nmid);
+
+AA.r = AA[idx,];
+
+idx0 = which(AA.r == 0);
+
+AA.rs = sort(AA.r[-c(idx0,idx)], decreasing=TRUE); # remove zeroes and self
+
+length(AA.rs);  # number of unique actors
+sum(AA.rs);  # total ties.  one actor may be higher than another
+
+head(AA.rs,10);
+```
+
+
+### Denzel Washington first-contacts, zero-degrees of separation
+```{r}
+nmid = "nm0000243";
+idx = which(rownames(AA)==nmid);
+
+AA.r = AA[idx,];
+
+idx0 = which(AA.r == 0);
+
+AA.rs = sort(AA.r[-c(idx0,idx)], decreasing=TRUE); # remove zeroes and self
+
+length(AA.rs);  # number of unique actors
+sum(AA.rs);  # total ties.  one actor may be higher than another
+
+head(AA.rs,10);
+```
+Remember, this is a limited network of actors linked to these 2000 movies.
+
+### N - degrees of freedom
+This is a largish matrix, will take some time.
+```{r}
+timer.start = as.numeric(Sys.time());
+AA.1 = eigenMatMult(AA, AA); # one degree of separation
+timer.end = as.numeric(Sys.time());
+elapsed = round(timer.end - timer.start,2);
+print(paste0("Time: ", elapsed, " secs"));
+```
+
+```{r}
+timer.start = as.numeric(Sys.time());
+AA.2 = eigenMatMult(AA.1, AA); # two degrees of separation
+timer.end = as.numeric(Sys.time());
+elapsed = round(timer.end - timer.start,2);
+print(paste0("Time: ", elapsed, " secs"));
+```
+
+
+
+```{r}
+nmid1 = "nm0000243"; # denzel
+nmid2 = "nm0000226"; # will smith
+
+numberMoviesShared = function(nmid1, nmid2, AA)
+  {
+  
+  }
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The augmentation and power approach may be easiest.  Or we can sort and solve the power method.  Adding a lot of small elements (Google method) is not seem like a good option.
+```{r}
+A.s = 
+
+```
+
+
+
+
+
+
+
+HHI

@@ -1,0 +1,323 @@
+---
+title: 'R Notebook: IMDB (advanced features) for Will v Denzel'
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    toc_depth: 5
+    fig_caption: true
+    number_sections: true 
+---
+
+```{r}
+
+library(devtools);
+
+library(humanVerseWSU);
+
+path.github = "https://raw.githubusercontent.com/MonteShaffer/humanVerseWSU/master/";
+
+include.me = paste0(path.github, "misc/functions-nlp.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-str.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-stack.R");
+source_url( include.me );
+include.me = paste0(path.github, "misc/functions-nlp-pos.R");
+source_url( include.me );
+
+include.me = paste0(path.github, "humanVerseWSU/R/functions-encryption.R");
+source_url( include.me );
+
+
+
+path.to.nascent = "C:/Users/Alexander Nevsky/Dropbox/WSU-419/Fall 2020/__student_access__/unit_02_confirmatory_data_analysis/nascent/";
+
+folder.nlp = "nlp/";
+path.to.nlp = paste0(path.to.nascent, folder.nlp);
+
+
+###### UPDATES TO dataframe subset function ######
+# inflation adjustments for NA ... and improvements on subsetting
+include.me = paste0(path.github, "humanVerseWSU/R/functions-dataframe.R");
+source_url( include.me );
+
+include.me = paste0(path.github, "humanVerseWSU/R/functions-inflation.R");
+source_url( include.me );
+
+```
+
+# (IMDB) Custom library
+
+This is a large dataset I harvested in September.  It will allow us to explore more comprehensively the relationships of various features of the movie database.  It is large (about 50MB), so installing may take some time if you are on a slow internet connection.
+
+This dataset will be the source you will use on your final exam to answer the question posed earlier in the semester about Will Smith and Denzel Washington.  You now have more analytics skills and with the new dataset there are more features you can extract.
+
+```{r}
+# library(devtools);
+# install_github("MonteShaffer/imdb/imdb"); # choose #3 to humanVerseWSU
+# detach(package:imdb);
+library(imdb);
+packageVersion("imdb");  # ‘0.1.1’
+# ?loadDataIMDB
+```
+
+## Load data
+
+Once this is run, a lot of memory will be required to read in the 23 compressed files.
+
+```{r}
+imdb::loadDataIMDB();
+names(imdb.data);
+
+humanVerseWSU::loadInflationData();
+```
+
+
+## Will Smith cont'd
+
+
+### Cast
+```{r}
+will.nmid = "nm0000226";
+will.movies = IMDB.getMoviesForPerson(will.nmid);
+will.n = nrow(will.movies);
+will.cast = merge(will.movies[,c(1,3:5)], imdb.data$movies.df$cast, by="ttid");
+
+length(unique(will.cast$nmid));
+nrow(will.cast);
+will.cast;  # this merge will create about 111 x 15
+
+```
+
+### Cast bio
+```{r}
+will.cast.info = merge(will.cast, imdb.data$all.actors.info, by="nmid");
+dim(will.cast.info);
+will.cast.info;  # we have 705 that have a "actor.info" page ... that means they were tied to top-50 movies by year somehow
+
+
+# let's predict gender
+predictGenderFromBio = function(bio, gender = list(
+            "male" = c("he", "his", "him"), 
+          "female" = c("she", "hers", "her")) )
+  {
+  bio = gsub("(","",bio,fixed=TRUE);
+  bio = gsub(")","",bio,fixed=TRUE);
+  bio = gsub('"',"",bio,fixed=TRUE);
+  
+  words = getRawWords(bio); # from nlp, converts to lower
+  
+  mycounts = list("male" = 0, "female" = 0);
+  tc = 0;
+  gc = 2;
+  for(i in 1:gc)
+    {
+    key = names(gender)[i]; 
+    for(j in 1:length(gender[[key]]))
+      {
+      mc = sum(words == gender[[key]][j]);  
+      mycounts[[key]] = mc + mycounts[[key]];
+      tc = mc + tc;
+      }
+    }
+  # mycounts;
+  # we could return a ratio ... but a decision for this example would likely be best ...
+  if(tc == 0) { return (NA); } # no data ...
+  result = "male"; # default in hollywood?
+  if(mycounts$female > mycounts$male) { result = "female"; }
+  result;
+  }
+
+```
+
+### Cast gender
+```{r}
+will.cast.info$gender = NA;
+for(i in 1:nrow(will.cast.info))
+  {
+  will.cast.info$gender[i] = predictGenderFromBio(will.cast.info$bio[i]);
+  }
+ 
+table(will.cast.info$gender);
+# we could cleanup NA using first name ... maybe ... Cameron Diaz is NA?
+```
+
+### Cast by year
+```{r}
+table(will.cast.info$year);
+plot( table(will.cast.info$year) );  # unique collaborators each year ... basically 15 * number of movies ... 
+```
+
+### Cast gender, by year
+```{r}
+# could "genderify" using a grouping ... is there a trend in the gender collaboration thing?  Was there a change point?
+will.cast.info$gender = factor(will.cast.info$gender)
+# https://www.datasciencemadesimple.com/table-function-in-r/
+#prop.table( as.table(table(will.cast.info$year,will.cast.info$gender)) );
+byyear = as.numeric(table(will.cast.info$year));
+table(will.cast.info$year,will.cast.info$gender)/byyear;  # NA on gender may make this a bit off from 100%
+
+```
+
+
+### Cast changing name
+```{r}
+new.name = which(will.cast.info$name.x != will.cast.info$name.y);
+will.cast.info[new.name,];
+```
+### Cast role diversity (not necessarily in his films)
+
+```{r}
+# build roles as unique columns with dataframe function
+
+will.cast.info.r = replaceFactorColumnWithIndicatorVariables(will.cast.info, "roles", "role", use.boolean=FALSE);
+
+will.cast.info.r;  
+```
+
+
+### Cast proportions of diversity
+```{r}
+n.will.r = length(unique(will.cast.info.r$ttid));  # of 111 n.will, how many are in this merged dataframe
+
+# 11:34 ... total roles ... a single nmid may have up to 3 roles ... this is not necessarily the role of the nmid working with Will, but nmid diversity
+length(names(will.cast.info.r[11:34]));
+# colSums(will.cast.info.r[,11:34]);
+role.p = sort(colSums(will.cast.info.r[,11:34])/n.will.r, decreasing = TRUE);  # proportion by movie
+role.p;
+#could "group by" gender
+```
+
+
+### HHI Diversity Index
+<https://en.wikipedia.org/wiki/Herfindahl%E2%80%93Hirschman_Index>
+
+Likely a nature of Hollywood Structure.
+```{r}
+# How diverse is this?
+topN = 6;
+H = sum(role.p[1:topN]^2);
+N = length(role.p[1:topN]);
+H.star = (H - 1/N)/ (1 - 1/N);
+
+H;
+N;
+H.star;
+```
+
+### HHI of movie genre
+
+```{r}
+will.movies.r = replaceFactorColumnWithIndicatorVariables(will.movies, "genre", "genre", use.boolean=FALSE);
+will.movies.r;  # if I did this with a larger dataframe, it would possibly pick up more categories ... 7:24
+# could data-reduce the genres (with bigger dataframe) using PCA, eigen, SVD (or EFA)
+
+length(names(will.movies.r[7:24]));
+# colSums(will.cast.info.r[,11:34]);
+genre.p = sort(colSums(will.movies.r[,7:24])/will.n, decreasing = TRUE);  # proportion by movie
+genre.p;
+```
+```{r}
+topN = 6;
+H = sum(genre.p[1:topN]^2);
+N = length(genre.p[1:topN]);
+H.star = (H - 1/N)/ (1 - 1/N);
+
+H;
+N;
+H.star;
+```
+
+### Sentiment (Positive/Negative) "paragraph"
+```{r}
+will.movies.r$sentiment.pos = NA;
+# we can just record the positive for each?
+for(i in 1:nrow(will.movies.r))
+  {
+  #### UNCOMMENT TO BUILD THIS OUT ####
+  ############### TAKES TOO LONG TO KNIT #############
+  # paragraph = will.movies.r$paragraph[i];
+  # sentiment = doSentimentAnalysis(paragraph);
+  # print(will.movies.r$title[i]); print(paragraph); print(sentiment);
+  # will.movies.r$sentiment.pos[i] = sentiment[1];
+  }
+
+# recall we have a longer paragraph in "storyline" ... we also have a "tagline"
+```
+
+```{r}
+# we may want to truncate to 1980-2019 ... 
+#summary(will.movies.r$sentiment.pos);
+#plot(sort(will.movies.r$sentiment.pos), type="l");
+#boxplot(will.movies.r$sentiment.pos);
+
+```
+## Other Features cont'd
+
+You should use this notebook to play around with some other feature ideas you have one one of the actors.  We will clean this up and setup a dataset that can allow an "objective-ish" framework.
+
+I want to introduce some advance metrics regarding networks and relationships, more than counting actors and building proportions.  
+
+-- TODO --
+
+
+# Framework of final setup
+
+I have tried to provide you with lots of data, so you can go to town on features.  But to do a nice objective comparison, we need to understand how to make comparables.  So let's review some of the movie lists we originally had, and see the membership of will and denzel.
+
+```{r}
+will.nmid = "nm0000226";
+will.movies = IMDB.getMoviesForPerson(will.nmid);
+will.n = nrow(will.movies);
+
+
+denzel.nmid = "nm0000243";
+denzel.movies = IMDB.getMoviesForPerson(denzel.nmid);
+denzel.n = nrow(denzel.movies);
+```
+
+## Number of Movies
+
+### Will
+```{r}
+will.n;
+will.ttids = will.movies$ttid;
+length( intersect(will.ttids, imdb.data$movies$all) );
+length( intersect(will.ttids, imdb.data$movies$top250) );
+length( intersect(will.ttids, imdb.data$movies$popular50$ttid) );
+length( intersect(will.ttids, imdb.data$movies$gem50$ttid) );
+```
+
+### Denzel
+
+```{r}
+denzel.n;
+denzel.ttids = denzel.movies$ttid;
+length( intersect(denzel.ttids, imdb.data$movies$all) );
+length( intersect(denzel.ttids, imdb.data$movies$top250) );
+length( intersect(denzel.ttids, imdb.data$movies$popular50$ttid) );
+length( intersect(denzel.ttids, imdb.data$movies$gem50$ttid) );
+
+intersect(denzel.ttids, will.ttids);  # interesting... https://www.imdb.com/title/tt1546668/fullcredits ... a movie about movies?
+```
+
+## Comment
+
+So if we want to see diversity as a feature of best, we should likely utilize metrics of diversity across all films.  This is like the "preliminary" to the main event, a nice table summarizing the diversity of each would be very informative.  Insights can be extracted by descriptively reporting on some of the features across all of the actor's playlist:
+
+- How many movies?  How many in certain lists?  What proportions in lists?
+- How many by year?  How many unique actors by year?  Gender?
+- And so on.
+
+## Popular 50:  fish in the pond
+If we want to anchor to "popular50", we have 19 from each actor.  Seems like a nice "equal foundation for a fair fight".
+
+So trying to do a head-to-head comparison, while ignoring the relationship of these actors in all of Hollywood is really a myopic analysis.  So let's define some rankings where they are fish in the bigger pond.
+
+- Let's truncate time:  1980-2019 (2020 is not yet finished, but we have 40 years of data).
+- Top 50 based on popular by year, that is about 2000 movies, of which they are 19/19 respectively.  Fish in the bigger pond.  A table of these 19 movies, side-by-side, ranked for a given person would be informative (with year in parentheses or something).
+- With this larger dataframe, do rankings like we outlined on several criteria, and do a boxplot on the rankings of each in the larger universe.
+- For money, we have budget, opening weekend, usa gross, and global gross.  We should standardize to a common year "2000" before any rankings are performed.  We could create a new variable such as profit-us (usa gross-budget) and global-nonus (I believe global gross includes the U.S., captures international market in isolation; this proportion as a function of usa gross will be telling; e.g. "American Sniper" versus any $1Billion movie)
+- A summary of any given ranking for a fish in the pond will be informative.  The idea of a quantile (percentile) would be more informative than a median, or Q1 or Q3 ... 
