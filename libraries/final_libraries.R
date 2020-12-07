@@ -16,11 +16,12 @@ require(psych);         # sphericity
 require(openNLP);       # NLP
 require(NLP)
 require(tesseract);
-library(imdb);          # IMDB data
+require(imdb);          # IMDB data
 require(magick);
 require(tripack);
 require(lsa);
-require(matrixStats)
+require(matrixStats);
+require(SentimentAnalysis);
 
 
 require(quanteda);require(quanteda.corpora);  #NLP text as multivariate
