@@ -30,13 +30,12 @@ internalRanking <- function(actor.movies, by.year){
 
 #######################################
 
-predictGenderFromBio = function(bio, gender = list(
-  "male" = c("he", "his", "him"), 
-  "female" = c("she", "hers", "her")) )
+predictGenderFromBio = function(bio, gender )
 {
   bio = gsub("(","",bio,fixed=TRUE);
   bio = gsub(")","",bio,fixed=TRUE);
   bio = gsub('"',"",bio,fixed=TRUE);
+  bio = gsub(","," ",bio,fixed=TRUE);
   
   words = getRawWords(bio); # from nlp, converts to lower
   
@@ -146,5 +145,6 @@ matrixPower = function(M, times=1)
 }
 
 #######################################
+
 
 
