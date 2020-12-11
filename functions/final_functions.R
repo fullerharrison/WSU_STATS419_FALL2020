@@ -146,5 +146,112 @@ matrixPower = function(M, times=1)
 
 #######################################
 
+castGenderData <- function(actor.movies, gender.list, all.movies.actors.characters, all.actors.info)
+  {
+  # subset actors working with actor
+  actor.movies.1 <- merge(actor.movies[, c(1,5)], all.movies.actors.characters, by = "ttid");
+  
+  # All actor data under certain criteria - all.actors.info for top 50 movie by year
+  cast.movie.details <- merge(actor.movies.1, all.actors.info, by = "nmid");
+  
+  cast.movie.details[, "gender.bio"] <- sapply(cast.movie.details[, c("bio")], FUN = predictGenderFromBio, gender = gender.list);
+  
+  cast.movie.details[, "gender.role"] <- sapply(cast.movie.details[, c("roles")], FUN = predictGenderFromBio, gender = gender.list);
+  # 16 that do not get classified for will 
+  #
+  # Ratio of male and females from gender prediction for all movies in top 50 in a given year
+  
+  # convert gender to numeric
+  for (i in 1:nrow(cast.movie.details)[1]){
+    if ((cast.movie.details[i, "gender.role"] == "male" | is.na(cast.movie.details[i, "gender.role"])) || (cast.movie.details[i, "gender.bio"] == "male" | is.na(cast.movie.details[i, "gender.bio"]))){cast.movie.details[i, "male"] = 1}
+    else{cast.movie.details[i, "male"] = 0}
+    if ((cast.movie.details[i, "gender.role"] == "female" | (is.na(cast.movie.details[i, "gender.role"])) | cast.movie.details[i, "gender.bio"] == "female" | is.na(cast.movie.details[i, "gender.bio"]))){cast.movie.details[i, "female"] = 1}
+    else{cast.movie.details[i, "female"] = 0}
+  }
+  
+  # aggregate number of cast by movie
+  movie.by.gender <- aggregate( cbind(male, female)~ttid,data = cast.movie.details, FUN = sum)
+  
+  # proportion by gender
+  movie.by.gender[, "male.prop"] <- round(movie.by.gender[, "male"] / (movie.by.gender[, "male"]+ movie.by.gender[, "female"]), 2)
+  
+  movie.by.gender[, "female.prop"] <- round(movie.by.gender[, "female"] / (movie.by.gender[, "male"]+ movie.by.gender[, "female"]), 2)
+  
+  
+  # The movies where a cast member has played in a top 50 movie in any given year
+actor.movies.2 <- merge(actor.movies, movie.by.gender, by = "ttid")
+
+return(list(actor.movies = actor.movies.2, cast.data = cast.movie.details, all.cast.members = actor.movies.1))
+  
+  }
+
+#######################################
+
+castAgeData <- function(actor.cast, actor.nmid, analysis.date)
+{
+  # age of cast from time of analysis
+  # https://masterr.org/r/accurate-calculation-of-years-between-dates/
+  
+  for (i in 1:nrow(actor.cast$cast.data)[1])
+  {
+    actor.cast$cast.data[i, "age"] = round(lubridate::time_length(difftime(analysis.date, lubridate::as_date(actor.cast$cast.data[i, "born.when"])), "years"))
+  }
+  
+  
+  # scale to actors age
+  actor.age <- unique(actor.cast$cast.data[actor.cast$cast.data$nmid %in% actor.nmid, "age" ]);
+  
+  actor.cast$cast.data[, "age.s"] <- round( actor.cast$cast.data[, "age"]/actor.age,  2);
+  return(actor.cast)
+}
+#######################################
+
+castOriginData <- function(actor.cast)
+{
+  for (i in 1:nrow(actor.cast$cast.data)[1]) {
+  # https://stackoverflow.com/questions/42943533/r-get-last-element-from-str-split
+    actor.cast$cast.data[i,"country"] = gsub("^.*,", "", actor.cast$cast.data[i,"born.where"]);
+    actor.cast$cast.data[i,"country"] = gsub(" ", "", actor.cast$cast.data[i,"country"]);
+  }
+  actor.cast$cast.data[,"values"] = 1;
+
+  actor.cast$cast.data %>%
+    distinct(ttid, country, .keep_all = T) %>%
+    group_by(ttid) %>%
+    summarise(countries.n = sum(values)) -> cast.by.country;
+  
+  actor.cast$cast.data %>%
+    pivot_wider(names_from = country, values_from = values) %>%
+    group_by(ttid) %>%
+    summarise_if(is.numeric, sum, na.rm = T) %>%
+    select(-c(actor.rank:age.s)) -> cast.by.countries;
+  
+  actor.cast$actor.movies <- merge(actor.cast$actor.movies, cast.by.country, by="ttid");
+  actor.cast$actor.movies <- merge(actor.cast$actor.movies, cast.by.countries, by="ttid");
+  return(actor.cast)
+}
+#######################################
+
+castHeadlinerData <- function(actor.cast, actors.headliners)
+{
+  # Total unique actors as headliners... do they repeat in several movies
+  # Yes- within movies
+  # 209 headlining actors , actors without bio data ~1000... function of starring in a top 50 film,
+  # actors with bio data, and appear in at least 15 movies
+  headliner.nmid <- data.frame("nmid" = actors.headliners);
+  actor.cast$cast.headliner <- merge(actor.cast$cast.data, headliner.nmid, by = "nmid");
+  actor.cast$cast.headliner[, "headliners"] <- 1 ;
+  
+  # aggregate number of headliner by movie
+  movie.by.headliner <- aggregate ( headliners~ttid, data = actor.cast$cast.headliner, FUN = sum);
+  
+  actor.cast$movie.headliner <- merge(actor.cast$actor.movies, movie.by.headliner, by = "ttid");
+  
+  return(actor.cast)
+}
+#######################################
+#######################################
+#######################################
+
 
 
