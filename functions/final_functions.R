@@ -210,12 +210,16 @@ castOriginData <- function(actor.cast)
 {
   for (i in 1:nrow(actor.cast$cast.data)[1]) {
   # https://stackoverflow.com/questions/42943533/r-get-last-element-from-str-split
-    actor.cast$cast.data[i,"country"] = gsub("^.*,", "", actor.cast$cast.data[i,"born.where"]);
+    actor.cast$cast.data[i,"country"] = gsub('\\[.*?\\]', "", actor.cast$cast.data[i,"born.where"], perl = T);
+    actor.cast$cast.data[i,"country"] = gsub("^.*,", "", actor.cast$cast.data[i,"country"]);
     actor.cast$cast.data[i,"country"] = gsub(" ", "", actor.cast$cast.data[i,"country"]);
+
+    # actor.cast$cast.data[i,"country"] = gsub("[", "", actor.cast$cast.data[i,"country"], fixed = T);
   }
   actor.cast$cast.data[,"values"] = 1;
-
+  
   actor.cast$cast.data %>%
+    select(ttid, country, values) %>%
     distinct(ttid, country, .keep_all = T) %>%
     group_by(ttid) %>%
     summarise(countries.n = sum(values)) -> cast.by.country;
@@ -249,6 +253,30 @@ castHeadlinerData <- function(actor.cast, actors.headliners)
   
   return(actor.cast)
 }
+#######################################
+
+genreDiveristyData <- function(actor.cast)
+{
+  # number of collective genres by movie
+  actor.cast$actor.movies %>%
+    separate_rows(genre, convert = T) %>%
+    mutate(genre.n = 1) %>%
+    group_by(ttid) %>%
+    summarise(genre.n = sum(genre.n)) -> genre.by.movie;
+  # number of genres indepentally by movie
+  actor.cast$actor.movies %>%
+    select(ttid, genre) %>%
+    separate_rows(genre, convert = T)%>%
+    mutate(values = 1) %>%
+    pivot_wider(names_from = genre, values_from = values, values_fill = 0) -> genres.by.movie;
+    
+  
+  actor.cast$actor.movies = merge(actor.cast$actor.movies, genre.by.movie, by="ttid");
+  actor.cast$actor.movies = merge(actor.cast$actor.movies, genres.by.movie, by="ttid");
+  return(actor.cast)
+}
+
+#######################################
 #######################################
 #######################################
 #######################################
